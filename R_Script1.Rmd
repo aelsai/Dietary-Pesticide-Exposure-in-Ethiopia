@@ -1,0 +1,1586 @@
+---
+title: "Supplementary Information"
+author: "Asefa et al."
+date: "June 2025"
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+    latex_engine: xelatex
+  word_document:
+    toc: true
+    toc_depth: '2'
+subtitle: "A Multilevel Meta-Analysis and Population-Wide Probabilistic Health Risks
+  of Dietary Pesticide Exposure in Ethiopia"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, message = FALSE, warning = FALSE,
+  tidy.opts = list(width.cutoff = 60), tidy = TRUE, 
+  cache = TRUE)
+```
+
+**Section 0: Preliminary Step**
+
+_**Before proceeding with the next sections, let's install, update and/or load required packages**_
+
+```{r, message=FALSE}
+#Uncomment to install/update packages
+#install.packages(c("here", "readxl", "readr", "synthesisr", "dplyr", "tidyverse", "purrr", "stringr", "tibble", "ggplot2", "ggridges", "ggthemes", "ggsci", "ggsankey", "ggalluvial", "tidygraph", "EnvStats", "NADA", "NADA2", "survival", "mice", "VIM", "lattice", "metafor", "clubSandwich", "lme4", "orchaRd", "emmeans", "patchwork", "moments", "flextable", "mc2d", "lhs", "truncnorm", "fitdistrplus"))
+
+#update.packages(ask = FALSE, checkBuilt = TRUE)
+
+#load packages
+library(here)
+library(readxl)
+library(readr)
+library(synthesisr)
+library(dplyr)
+library(tidyverse)
+library(purrr)
+library(stringr)
+library(tibble)
+library(ggplot2)
+library(ggridges)
+library(ggthemes)
+library(ggsci)
+library(ggsankey)
+library(ggalluvial)
+library(tidygraph)
+library(EnvStats)
+library(NADA)
+library(NADA2)
+library(survival)
+library(mice)
+library(VIM)
+library(lattice)
+library(metafor)
+library(clubSandwich)
+library(lme4)
+library(orchaRd)
+library(emmeans)
+library(patchwork)
+library(moments)
+library(flextable)
+library(mc2d)
+library(lhs)
+library(truncnorm)
+library(fitdistrplus)
+```
+
+# SI Section 1: Introduction and Literature Search
+
+**Introduction**
+
+This Supplementary Information (SI) document outlines the R code and steps for conducting a multilevel meta-analysis and probabilistic risk assessment of dietary pesticide exposure in Ethiopia. There are five main sections dealing with study search and validation, dataset preparation and exploration, missing data handling, multilevel meta-analysis, and pesticide safety assessments (maximum residue level exceedance and chronic health risks).
+
+First, we conducted an exhaustive literature search across global and local databases to identify studies reporting pesticide residues in Ethiopian food commodities. From this, we included 44 studies contributing 2,099 residue data points (i.e., effect sizes) across 87 pesticides and 18 food subgroups. Next, we identified and handled left-censoring and missing data in our compiled dataset using advanced methods such as Kaplan–Meier (KM) estimation and multilevel imputation. We pooled national pesticide residue levels using a three-level MMA model with robust variance estimation (RVE), and uni-moderator meta-regression was conducted to identify predictors of variation. As a preliminary safety assessment, we computed MRL exceedance rates. Finally, we used unique pesticide–food combination estimates, Ethiopian-specific food consumption rates, adult body weight, and derived toxicological reference values as inputs to our Monte Carlo-based probabilistic risk assessment, with Latin Hypercube Sampling, to calculate chronic daily pesticide intake and associated non-cancer and cancer risks.
+
+As mentioned in the main text, our study aimed to answer several research questions based on the following hypotheses:
+
+- _H1:_ The overall pesticide residue concentration in Ethiopian foods is expected to be high, and to vary by pesticide and food type.
+
+- _H2:_ Sample location, analysis method (instrument) and food origin significantly moderate pesticide residue concentrations.
+
+- _H3:_ Low to medium health risks are expected, with legacy pesticides and animal-derived foods contributing most.
+
+**Study Identification and Inclusion**
+
+To ensure a comprehensive and systematic identification of relevant studies, a structured literature search was conducted across multiple databases (Web of Science, Scopus, PubMed, Google Scholar, Semantic Scholar, and OpenAlex) and repositories (OAIster, ProQuest Dissertations & Theses, EthERNA, and six Ethiopian institutional repositories identified via OpenDOAR). Pesticide-related keywords such as agrochemical, insecticide, fungicide, herbicide, and occurrence/exposure-related keywords such as pollution, exposure, monitoring, residue, contamination, food, with geographic focus, Ethiopia were defined and used. Database specific search strategy, tailored its indexing system, controlled vocabulary and search functionalities, along with hits were provided in Table S1.
+
+Our search strategy was validated against a set of 35 benchmark studies, compiled from multiple sources and based on expert knowledge of the literature following the established protocols for search string validation by (Lagisz et al., 2025). Our preliminary Scopus search retrieved all of the benchmark studies, suggesting its sensitivity and comprehensiveness. A list of benchmark studies used for search strategy validation was provided in Table S2. Study identification, screening and inclusion was summarized using Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) flow diagram (Figure 1).
+
+
+Study Inclusion and Data Extraction
+
+A comprehensive systematic literature search was conducted to identify studies on pesticide residues in food sources within Ethiopia. Supplementary Information (SI) Text 1 briefly describes study search strategy, validation, and PRISMA flow diagram. Overall, we queried multiple bibliographic databases, including Web of Science, Scopus, PubMed, Google Scholar, Semantic Scholar, and OpenAlex. To ensure broad coverage, we also searched gray literature sources such as OAIster, ProQuest Dissertations & Theses, EthERNA, and six local Ethiopian university repositories. Our search strategy included pesticide-related keywords (e.g., "pesticide", "agrochemical", "insecticide") and occurrence/exposure-related keywords (e.g., "pollution", "exposure", "residue") with geographic focus, Ethiopia. These keywords were combined using Boolean operators (e.g., OR, AND, NOT) and searched in Title/Abstract/keyword after being customized for each search database. For some databases lacking advanced search features, including local repositories, a simple search terms like pesticide, residue, or food contamination was used (SI Table S1). We validated the sensitivity and comprehensiveness of our search strategy against a set of 35 benchmark studies compiled from multiple sources based on authors’ knowledge of the existing pesticide residue studies in Ethiopia using Scopus search following the established protocols by (Lagisz et al., 2025). Our search retrieved 100% of the benchmark studies, showcasing the robustness of our strategy (see SI Table S2). We also manually scanned reference lists of identified relevant studies and review articles. The final search was updated on [xx/xx].
+
+Across all the databases and repositories, a total of 1,539 studies were retrieved, and imported and merged into one file in Endnote. Then, 237 duplicates were removed using a string-matching algorithm in R package synthesisr. Again 54 duplicates were removed after importing into Rayyan (https://www.rayyan.ai/) for initial screening stage. Based on Title/Abstract screening, 134 studies were identified and through full text screening, a total of 44 studies were finally included (SI Figure S1). As such, studies were included if addressed pesticide residues in Ethiopian food sources, provided quantitative residue concentration data (e.g., mean, median, standard deviation), and published in English or local languages authors could understand. Studies were excluded if they lacked quantitative data, focused on occupational exposure, or were commentaries, editorials, or reviews without original data.
+
+From the included studies, we extracted study characteristics (first author, title, DOI, publication year), sample characteristics (food source type, analytical instrument, sample size, sample year), and pesticide data (name, summary statistics) (See SI Table S3). All analyzed pesticides, regardless of detection status, were extracted from included studies along with analytical instrument used and respective limits of detection and quantification (LOD/LOQ) (Table S4). Raw pesticide residue concentrations were prioritized (i.e., unique sample/location measurements), and if unavailable, summary statistics (e.g., mean and standard deviation) were extracted. Data from figures were extracted using PlotDigitizer. Study search, screening, and data extraction were primarily performed by one author (EMA) and independently verified by the remaining authors, with disagreements resolved through discussion.
+
+_**Duplication Removal**_
+
+Two-step process was used for deduplication:
+
+- String-matching algorithm using `synthesisr` package
+
+- Rayyan duplication removal tool (https://www.rayyan.ai/)
+
+```{r }
+##String-matching algorithm using synthesisr
+
+#load and process RIS file
+ris_dat<- read_refs(here("search/Pest_ETH.ris"))
+#1539 articles
+ris_dat$title2 <- str_replace_all(ris_dat$title,"[:punct:]","") %>% 
+  str_replace_all(.,"[ ]+", " ") %>% tolower()
+ris_dat <- distinct(ris_dat, title2, .keep_all = TRUE)
+#dim(ris_dat)
+
+#remove partial matches in titles
+duplicates_string <- find_duplicates(ris_dat$title2, method = "string_osa", to_lower = TRUE, rm_punctuation = TRUE, threshold = 7)
+#manual_checks <- review_duplicates(ris_dat$title, duplicates_string)
+
+#extract unique references and drop title2 & n_duplicates
+ris_dat1 <- extract_unique_references(ris_dat, duplicates_string) %>%
+  dplyr::select(-title2, -n_duplicates)
+#1303 after duplicate removal!
+
+#save as a .bib file, upload to Zotero, export as .ris file, import to Rayyan.
+
+#write_refs(ris_dat1, format = "bib", file = "search/Pest_ETH_dedupl.bib")
+```
+
+```{r, fig.cap="PRISMA flow diagram for study identification, screening and inclusion", out.width="90%", fig.asp=0.75, dpi=800}
+knitr::include_graphics(here("inputs/PRISMA.png"))
+```
+
+# SI Section 2: Dataset Preparation and Exploration
+
+Pesticide residue concentration data extracted from included was loaded and processed as presented below (the main dataset). Ancillary/Supplemental datasets (i.e., maximum residue level, toxicity reference value and food consumption rate datasets) were loaded and processed as presented in `R_Script2`.
+
+## Pesticide Residue Data Processing
+
+The compiled residue dataset encompass pesticide concentration values in Ethiopian foods, and metadata related to sample (i.e., region, zone, food type) and analytical method (i.e., instrument, limit of detection/quantification).
+
+```{r dataset}
+#load and clean residue dataset
+pest_raw <- read_excel(here("MS1_data.xlsx"), sheet = "pest_raw") %>%
+  #select relevant variables
+  dplyr::select(study_id, region, zone, pest_met, pest_parent, type, class, 
+                food, food_group, food_origin, instrument, LOD, LOQ, n_samp, 
+                Mean, SD, detected, DL_present) %>%
+  #drop pesticide types other than insecticides, herbicides & fungicides
+  filter(type != "Other") %>%
+  #add unique effect size id and detection limit
+  mutate(es_id = sprintf("es_%02d", 1:n()), DL = coalesce(LOD, LOQ)) %>% 
+  #load categorical variables as factor
+  mutate_if(is.character, as.factor) %>%
+  #load numerical variables as number
+  mutate(Mean = as.numeric(ifelse(
+    as.character(Mean) == "ND", NA, as.character(Mean))), #convert ND to NA
+    SD = as.numeric(SD), n_samp = as.numeric(n_samp), LOD = as.numeric(LOD), 
+    LOQ = as.numeric(LOQ), DL = as.numeric(DL)) %>% 
+  droplevels()
+
+#rename unique pesticide/metabolite residues
+pest_raw$pesticide<- pest_raw$pest_met
+```
+
+## Pesticide Residue Data Exploration
+
+_**First glance at the dataset**_
+
+```{r data-glimpse, results='hide', message=FALSE}
+#head(pest_raw) 
+length(levels(pest_raw$study_id))     #No. of study = 40
+length(levels(pest_raw$es_id))        #No. of effect size = 2271
+length(levels(pest_raw$pest_met))     #87 pesticides/metabolities
+length(levels(pest_raw$pest_parent))  #63 pesticide parents
+length(levels(pest_raw$type))         #3 major use types
+length(levels(pest_raw$food))         #18 food subgroups
+length(levels(pest_raw$food_group))   #6 main food groups
+length(levels(pest_raw$zone))         #15 main sampling zones
+length(levels(pest_raw$region))       #8 regions in Ethiopia
+```
+
+_**Sankey Diagram**_
+
+The Sankey diagram (Main text, Figure 1) summarizes the distribution of key study attributes, including food group, region, pesticide use type, detection status, and analytical instrumentation. 
+
+```{r, message=FALSE, fig.cap="Sankey Diagram illustrating the flow and distribution of pesticide residue detection characteristics across study attributes in Ethiopia", fig.width=6.5, fig.height=3.5, dpi=800}
+
+sankey.dat <- pest_raw %>%
+  dplyr::select(detected, DL_present, instrument, type, food_group, region)
+
+sankey_data <- make_long(sankey.dat, region, type, food_group, detected,
+                         instrument, DL_present)
+
+node_props <- sankey_data %>% group_by(x, node) %>%
+  summarise(n = n(), .groups = 'drop') %>% group_by(x) %>%
+  mutate(total = sum(n), percent = round(100 * n / total, 1),
+         node_label = paste0(node, " (", percent, "%)")) %>%
+  ungroup()
+
+sankey_data <- sankey_data %>% left_join(node_props, by = c("x", "node"))
+
+sp<- ggplot(sankey_data,
+       aes(x = x, next_x = next_x, node = node, next_node = next_node,
+           fill = node, label = node_label)) +
+  geom_sankey(flow.alpha = 1, node.color = "transparent") +
+  geom_sankey_label(size = 2.3, color = "black", fill = NA, fontface = "bold",
+                    na.rm = TRUE, label.size = 0) +
+  theme_sankey(base_size = 10) +
+  labs(x = NULL) +
+  theme(legend.position = "none",
+        axis.text.x = element_text(color = "black", size = 9, face = "bold")) +
+  scale_x_discrete(labels = c("Region", "Use Type", "Food Group", "Detected?", "Instrument", "DL Provided?"), position = "top")
+
+#sp
+
+#ggsave("output/Figure1_sankey_diagram.png", plot = sp, width = 6.5, height = 3.5, units = "in", dpi = 800)
+```
+
+_**Analyzed Vs. Detected pesticides**_
+
+In total, 225 unique pesticide compounds and metabolites were screened, among which 88 (39%) were detected in at least one sample.
+
+```{r }
+pest_screened <- read_excel(here("MS1_data.xlsx"), sheet = "all_screen") %>% 
+  group_by(pesticide) %>%
+  summarise(n_study = n_distinct(study_id),
+            n_detect = sum(detected == "Y"), #detected at least in one sample!
+            .groups = "drop")
+
+pest_detected <- pest_raw %>% group_by(pest_met) %>% 
+  summarise(n_ES = n(), n_sample = sum(n_samp, na.rm = TRUE),
+            .groups = "drop") %>%
+  mutate(pest_met = str_to_lower(str_squish(pest_met))) 
+
+pest_all <- pest_screened %>%
+  left_join(pest_detected, by = c("pesticide" = "pest_met"))
+
+#sum(pest_all$n_detect == 0)            #137 not detected
+#sum((pest_all$n_sample), na.rm = TRUE) #18298 samples
+```
+
+_**Most commonly studied pesticide residues**_
+
+```{r }
+pest_studied <- pest_raw %>% group_by(pest_met, type) %>% 
+  summarise(n_study = n_distinct(study_id), n_ES = n(), 
+            n_sample = sum(n_samp, na.rm = TRUE), .groups = "drop") %>% 
+  arrange(desc(n_study), desc(n_ES), desc(n_sample))
+
+head(pest_studied, 10)
+```
+
+_**Most commonly studied food groups**_
+
+```{r }
+food_studied <- pest_raw %>% group_by(food, food_group, food_origin) %>% 
+  summarise(n_study = n_distinct(study_id), n_ES = n(), 
+            n_sample = sum(n_samp, na.rm = TRUE), .groups = "drop") %>% 
+  arrange(desc(n_study), desc(n_ES), desc(n_sample))
+
+head(food_studied, 10)
+```
+
+## Pesticide Residue Data Summary
+
+Our pesticide residue datase encompass 2,271 unique measurements (effect sizes) derived from 18,298 food samples collected across Ethiopia. These measurements were compiled from 40 studies, spanning 8 regions, 15 sampling zones, 6 major food groups, and 3 pesticide use types. Notably, legacy organochlorine pesticides, particularly DDT and its metabolites _(p,p′-DDT, p,p′-DDE, p,p′-DDD)_, as well as hexachlorocyclohexanes _(e.g., alpha-HCH)_ and endosulfans _(e.g., alpha-endosulfan, endosulfan-sulfate)_, were the most frequently detected compounds across studies. In terms of food matrices, high contributions were observed from fish, khat, and honey _(grouped under `others`)_ and vegetables such as _tomato and onion_. Approximately _41.3%_ of the unique pesticide measurements were reported as non-detects (NDs). Yet, explicit information on detection limits (LOD or LOQ) were reported in _93.4%_ of the cases, indicating good reporting practices and this will allow for robust methodologies to handle the significant left-censorship in our residue data.
+
+Overall, the complied pesticide residue dataset underscore both the _diversity_ and _complexity_ of pesticide contamination monitoring in Ethiopia’s food supply and provide a robust foundation for the multilevel meta-analyses and safety assessments.
+
+# SI Section 3: Handling of Missing Data
+
+## Overview of Missing Data
+
+Understanding the pattern and extent of missing data is crucial for selecting appropriate imputation strategies. Let's explore missingness across the key effect size variables.
+
+_**Missingness Overview**_
+
+```{r, results='hide', message=FALSE}
+sum(is.na(pest_raw$Mean))    # ~938 non-detects (NDs)
+sum(is.na(pest_raw$SD))      # ~1451 missing SDs
+sum(is.na(pest_raw$DL))      # ~149 missing detection limits
+sum(is.na(pest_raw$n_samp))  # ~283 missing sample sizes
+```
+
+_**Visualize missing data patterns**_
+
+As it can be seen from Figure 2, a substantial proportion of our dataset contains missing values _(41% ~ mean, 64% ~ standard deviation, 6.5% ~ detection limit, 12.5% ~ sample size)_, indicating the need for robust methods of missing data handling.
+
+_Note that missing Mean values primarily attribute to non-detects (NDs)!_
+
+```{r, message=FALSE, fig.cap="Missing data pattern visualization", fig.width=6.5, fig.height=4, dpi=800}
+pest_es <- pest_raw %>%
+  dplyr::select(study_id, pesticide, food, DL, Mean, SD, n_samp)
+
+aggr(pest_es, col = c("navyblue", "red"), 
+     numbers = TRUE, sortVars = FALSE, prop = FALSE,
+     labels = names(pest_es), cex.axis = 0.7,
+     ylab = c("Missing Data", "Pattern"))
+```
+
+## Pesticide Residue Data Processing
+
+Before, proceeding with missing data handling, let's explore and process our residue data characteristics. In this section, we identified and fitted the distribution of our data, and removed potential extreme outliers. We also checked the censoring structure in our data, assessing the possibility of Zero Inflation.
+
+_**Pesticide residue concentration distribution**_
+
+As shown in the following code chunk and Figure 3, the distribution is strongly _right-skewed and leptokurtic_ with numerous _extreme outliers._ Shapiro-Wilk test further confirms _non-normality._
+
+```{r, results='hide', message=FALSE}
+#summary statistics
+pest_raw$Mean <- as.numeric(pest_raw$Mean)
+pest_dist <- pest_raw %>% filter(!is.na(Mean))
+dist.test <- na.omit(pest_dist$Mean)
+
+summary(dist.test)       #Min:0, Median:13, Mean:756.5, Max:365100
+skewness(dist.test)      #28.64699
+kurtosis(dist.test)      #901.495
+shapiro.test(dist.test)  #p-value < 2.2e-16
+```
+
+```{r, fig.cap="Boxplot, Histogram and QQ-plot showing pesticide residue concentration data", fig.width=6.5, fig.height=3, dpi=800}
+#visual inspection
+p1 <- ggplot(pest_dist, aes(y = Mean)) + geom_boxplot()
+p2 <- ggplot(pest_dist, aes(x = Mean)) + geom_histogram()
+p3 <- ggplot(pest_dist, aes(sample = Mean)) + stat_qq() + stat_qq_line()
+
+p1|p2|p3
+```
+
+_**Fit distribution to observed data**_
+
+_The lognormal distribution provides the best fit based on AIC and other fit statistics_
+
+```{r, warning = FALSE}
+#observed data
+pest_fit <- pest_raw %>% filter(!is.na(Mean))
+fit.test <- na.omit(pest_fit$Mean)
+
+fit_ln <- fitdist(fit.test, "lnorm")        #best Fit
+fit_gamma <- fitdist(fit.test, "gamma")     
+fit_weibull <- fitdist(fit.test, "weibull") 
+fit_exp <- fitdist(fit.test, "exp")         
+
+#goodness-of-fit statistics
+fit_stats <- gofstat(list(fit_ln, fit_gamma, fit_weibull, fit_exp),
+                     fitnames = c("Lognormal", "Gamma", "Weibull", "Exponential"))
+fit_stats
+```
+
+_**Extreme outliers removal**_
+
+Our residue data was reduced to 2,099 effect sizes after extreme outliers removal, with improved stability for further analysis.
+
+```{r }
+#removal using 3×IQR rule
+Q1 <- quantile(pest_raw$Mean, 0.25, na.rm = TRUE)
+Q3 <- quantile(pest_raw$Mean, 0.75, na.rm = TRUE)
+IQR_val <- Q3 - Q1
+lower_bound <- Q1 - 3 * IQR_val
+upper_bound <- Q3 + 3 * IQR_val
+
+pest_iqr <- pest_raw %>%
+  filter((Mean >= lower_bound & Mean <= upper_bound) | is.na(Mean))
+```
+
+## Impute Missing Detection Limit
+
+The imputation of non-detects is highly dependent on the availability of detection limits (DLs). From the total missing DLs of 149, only 27 cases had both DL and Mean missing. We used simple substitution with median value to impute missing DLs, with expected minimal distortion.
+
+```{r}
+median_dl <- median(pest_iqr$DL, na.rm = TRUE)
+pest_iqr <- pest_iqr %>%
+  mutate(DL = ifelse(is.na(DL), median_dl, DL))
+```
+
+```{r }
+#final dataset post-processing
+pest_df <- pest_iqr %>%
+  mutate(Mean = as.numeric(Mean),
+         detected = !is.na(Mean))
+```
+
+_**Assess Zero Inflation and Censoring Structure**_
+
+One main concern in handling non-detects _(left-censored data)_ is potential zero-expansion or zero-inflation, where a high proportion of NDs might signify true zero concentrations rather than just concentrations below detection limits. We assessed if there may be zero-inflation in our residue data as below.
+
+```{r }
+#left-censored variable
+#use DL for ND & Mean for detects
+pest_df_lc <- pest_df %>%
+  mutate(lc = ifelse(detected, Mean, DL),
+         loglc = log(lc))
+```
+
+```{r, fig.cap="Visual representation of existance of zero expansion/zero-inflation", fig.width=6.5, fig.height=4, dpi=800}
+
+#plot distribution of log-concentrations
+ggplot(pest_df_lc, aes(x = loglc, fill = detected)) +
+  geom_histogram(binwidth = 0.5, alpha = 0.7, position = "identity") +
+  labs(title = "Detected vs. Non-Detected Concentrations",
+       x = "Log(Concentration)", y = "") +
+  scale_fill_manual(values = c("TRUE" = "steelblue", "FALSE" = "firebrick"),
+                    labels = c("TRUE" = "Detected", "FALSE" = "ND (~DL)")) +
+  theme_minimal()
+```
+
+As shown above, the resulting bimodal pattern indicates a large cluster of NDs at low values and a skewed distribution of detected residues, suggesting a mixture of true zeros and censored positive concentrations. Therefore, appropriate handling of zero-inflation in our data is needed.
+
+## Impute Non-Detects (Left-Censored Residue Data)
+
+While simple substitution methods (e.g., replacing NDs with 1/2 DL or zero) are sometimes recommended by regulatory bodies (US EPA, EFSA), they can introduce substantial bias in datasets, especially when missing data exceeds 30%. As such, we implemented four advanced imputation techniques for handling non-detects in our dataset, and selected the best performing method for further analysis. A fixed 50% zero-inflation probability was assumed for _ZILN_ based on the observed bimodal distribution.
+
+_**ND imputation methods used**_
+
+- _ZILN_: Zero-inflated lognormal (assumes a mix of true zeros and lognormal values)
+
+- _MLE_: Maximum Likelihood Estimation using censored lognormal fitting
+
+- _ROS_: Regression on Order Statistics under a lognormal assumption
+
+- _KM_: Kaplan–Meier method (non-parametric)
+
+Readers are referred to these references for detailed background on these methods:
+- (EFSA, 2010): 10.2903/j.efsa.2010.1557 
+- (Szarka et al., 2018): 10.1021/acs.jafc.8b00863 
+- (Shoari and Dubé, 2018): 10.1002/etc.4046 
+- (Sang et al., 2024): 10.1016/j.jenvman.2023.119813  
+
+_**Run ND imputation models**_
+
+```{r, warning = FALSE}
+
+##1.ZILN Imputation
+
+#set parameters
+ziln_fit_dat <- pest_df$Mean
+ziln_fit_dat[!pest_df$detected] <- pest_df$DL[!pest_df$detected]
+
+ziln_fit <- elnormCensored(
+  x = ziln_fit_dat, 
+  censored = !pest_df$detected, 
+  censoring.side = "left", ci = FALSE)
+
+#extract estimated log-normal parameters
+meanlog_ziln <- ziln_fit$parameters["meanlog"]
+sdlog_ziln <- ziln_fit$parameters["sdlog"]
+
+#apply zero-inflated imputation
+pest_df$ZILN <- pest_df$Mean
+nd_indices <- which(!pest_df$detected)
+
+set.seed(123)
+num_true_zeros <- round(length(nd_indices) * 0.50)
+shuffled_nd_indices <- sample(nd_indices)
+
+#assign zeros
+indices_true_zeros <- shuffled_nd_indices[1:num_true_zeros]
+pest_df$ZILN[indices_true_zeros] <- 0
+
+#assign random lognormal values truncated at DL
+indices_truncated <- shuffled_nd_indices[(num_true_zeros + 1):length(shuffled_nd_indices)]
+if (length(indices_truncated) > 0) {
+  nd_dls_draws <- pest_df$DL[indices_truncated]
+  p_at_nd_dls_ziln <- plnorm(q = nd_dls_draws, 
+                             meanlog = meanlog_ziln, sdlog = sdlog_ziln)
+  rand_ps_truncated_ziln <- runif(n = length(indices_truncated), 
+                                  min = 0, max = p_at_nd_dls_ziln)
+  random_ziln <- qlnorm(p = rand_ps_truncated_ziln, 
+                        meanlog = meanlog_ziln, sdlog = sdlog_ziln)
+  pest_df$ZILN[indices_truncated] <- random_ziln
+}
+
+##2.MLE Imputation (truncated lognormal random draws)
+MLE_fit_dat <- pest_df$Mean
+MLE_fit_dat[!pest_df$detected] <- pest_df$DL[!pest_df$detected]
+
+MLE_fit <- elnormCensored(x = MLE_fit_dat, censored = !pest_df$detected,
+                          censoring.side = "left", ci = FALSE)
+meanlog_mle <- MLE_fit$parameters["meanlog"]
+sdlog_mle <- MLE_fit$parameters["sdlog"]
+
+nd_dls <- pest_df$DL[nd_indices]
+p_at_nd_dls <- plnorm(q = nd_dls, meanlog = meanlog_mle, sdlog = sdlog_mle)
+rand_ps_truncated <- runif(n = length(nd_indices), min = 0, max = p_at_nd_dls)
+MLE_random <- qlnorm(p = rand_ps_truncated, 
+                     meanlog = meanlog_mle, sdlog = sdlog_mle)
+pest_df$MLE <- ifelse(pest_df$detected, pest_df$Mean, MLE_random)
+
+##3.ROS (Regression on Order Statistics)
+obs_ros <- pest_df$Mean
+cens_ros <- !pest_df$detected
+cenros_out <- cenros(obs_ros, cens_ros)
+pest_df$ROS <- ifelse(pest_df$detected, pest_df$Mean, cenros_out$modeled)
+
+##4.KM (Kaplan–Meier Imputation)
+obs_km <- ifelse(pest_df$detected, pest_df$Mean, pest_df$DL)
+cens_km <- !pest_df$detected
+surv_obj <- survfit(Surv(obs_km, !cens_km, type = "left") ~ 1)
+
+S_hat <- function(t) {
+  approx(x = surv_obj$time, y = surv_obj$surv, xout = t,
+         method = "constant", f = 0, rule = 2)$y
+}
+
+nd_inds_km <- which(!pest_df$detected)
+dl_vals_km <- obs_km[nd_inds_km]
+p_upper_km <- S_hat(dl_vals_km)
+
+set.seed(123)
+u_km <- runif(n = length(nd_inds_km), min = 0, max = p_upper_km)
+imps_km <- approx(x = surv_obj$surv, y = surv_obj$time, xout = u_km,
+                  method = "constant", f = 1, rule = 2)$y
+pest_df$KM <- obs_km
+pest_df$KM[nd_inds_km] <- imps_km
+```
+
+_**Comparison of ND imputation models**_
+
+```{r, warning = FALSE}
+##summary statistics
+methods <- c("Mean", "ZILN", "MLE", "ROS", "KM")
+summary_stats <- map_dfr(methods, ~{
+  data.frame(
+    Method = .x,
+    Min = min(pest_df[[.x]], na.rm = TRUE),
+    Q1 = quantile(pest_df[[.x]], 0.25, na.rm = TRUE),
+    Median = median(pest_df[[.x]], na.rm = TRUE),
+    Mean = mean(pest_df[[.x]], na.rm = TRUE),
+    Q3 = quantile(pest_df[[.x]], 0.75, na.rm = TRUE),
+    Max = max(pest_df[[.x]], na.rm = TRUE))
+})
+
+print(summary_stats) #Mean = detected-only data
+```
+
+```{r, fig.cap="Kernel density curves comparing ND imputation methods (log scale)", fig.width=6.5, fig.height=4, dpi=800}
+
+##visual inspection
+pest_long <- pest_df %>%
+  pivot_longer(cols = c(Mean, ZILN, MLE, ROS, KM), 
+               names_to = "Method", values_to = "Concentration") %>% 
+  filter(!is.na(Concentration))
+
+ggplot(pest_long, aes(x = Concentration, color = Method)) +
+  geom_density(linewidth = 1) + scale_x_log10() + 
+  scale_color_npg() + theme_bw() +
+  labs(title = "Imputation Method Comparison", 
+       x = "Residue Concentration (log scale)", y = "",
+       color = "Method") +
+  theme(plot.title = element_text(size = 12, face = "bold", hjust = 0.5))
+```
+
+As shown in Figure 5, _ZILN and MLE_ skew the distribution leftward due to conservative substitution. _ROS_ provides moderate recovery of central values but still deviates from original mode. _KM_ closely matches the distribution of detected values, with higher mean and median, making it a more conservative and distribution-preserving method.
+
+_Overall,_ we selected and used the Kaplan–Meier (KM) imputation results given its accuracy and robustness in handling left-censored pesticide residue data.
+
+```{r }
+pest_imp1 <- pest_df %>%
+  mutate(Mean = KM) %>%
+  dplyr::select(-ZILN, -MLE, -ROS, -KM)
+
+#write.csv(pest_imp1, "inputs/pest_imp1.csv", row.names = FALSE)
+```
+
+## Impute Missing SD and Sample Size
+
+As mentioned earlier, standard deviation (SD) and sample size (n_samp) is missing in about 64% and 12% our dataset. While formulas like Hozo et al. (2005) provide ways to estimate SD from available statistics, such high levels of missingness in our data are best addressed through multiple imputation methods to reduce bias and uncertainty. We implemented a simplified Multivariate Imputation by Chained Equations (MICE) algorithm with 50 iterations based on Predictive Mean Matching (pmm) to impute missing SDs and n_samp (van Buuren & Groothuis-Oudshoorn, 2011). Our assumptions were SDs and n_samp are missing at random and strongly dependent on Mean values despite the hierarchical nature of dataset.
+
+_**Run MICE Imputation Model**_
+
+```{r}
+#select relevant variables
+pest_imp_var <- pest_imp1 %>%
+  dplyr::select(study_id, pesticide, food, n_samp, Mean, SD)
+
+#initialize MICE
+ini <- mice(pest_imp_var, maxit = 0, printFlag = FALSE)
+meth <- ini$method
+pred <- ini$predictorMatrix
+
+#exclude non-numeric grouping variables
+exclude_vars <- c("study_id", "pesticide", "food")
+meth[exclude_vars] <- ""
+pred[exclude_vars, ] <- 0
+pred[, exclude_vars] <- 0
+
+#define predictive model for imputation
+meth["SD"] <- "pmm"
+pred["SD", c("n_samp", "Mean")] <- 1
+meth["n_samp"] <- "pmm"
+pred["n_samp", c("SD", "Mean")] <- 1
+
+#run MICE with 50 imputations
+pest_imp <- mice(pest_imp_var, m = 50, maxit = 20,
+                 method = meth, predictorMatrix = pred,
+                  seed = 999, printFlag = FALSE)
+```
+
+```{r, fig.cap="Density plots of MICE imputation result, indicating the imputation process did not distort the underlying data distribution", fig.width=6.5, fig.height=3.5, dpi=800}
+
+##visual inspection of MICE imputation
+
+#plot(pest_imp)
+densityplot(pest_imp)
+```
+
+_**Select Best-Imputed Dataset**_
+
+To retain only one representative dataset among the 50 MICE iterations, we calculated the total percentage absolute error between imputed and observed means of SD and n_samp, and selected the dataset with the smallest error (i.e., error minimization approach). 
+
+_It has been shown that imputation number 15 had the smallest total error (1.95%), closely matching the central tendencies of the observed data._
+
+```{r}
+##Best imputation based on error minimization
+
+#identify missing cases
+SD_na <- which(is.na(pest_imp1$SD))
+n_samp_na <- which(is.na(pest_imp1$n_samp))
+
+#reference means
+mean_SD <- mean(pest_imp1$SD, na.rm = TRUE)
+mean_n_samp <- mean(pest_imp1$n_samp, na.rm = TRUE)
+
+#initialize error dataframe
+error_df <- data.frame(imputation = 1:pest_imp$m, SD_error = NA_real_, 
+                       n_samp_error = NA_real_, total_error = NA_real_)
+
+#loop through imputations
+for (i in 1:pest_imp$m) {
+  df_i <- complete(pest_imp, i)
+  
+  imputed_SD_vals <- df_i$SD[SD_na]
+  imputed_n_vals  <- df_i$n_samp[n_samp_na]
+  
+  #compute % absolute error relative to observed means
+  sd_pct_error <- mean(abs(imputed_SD_vals - mean_SD) / abs(mean_SD), na.rm = TRUE)
+  n_pct_error  <- mean(abs(imputed_n_vals - mean_n_samp) / abs(mean_n_samp), na.rm = TRUE)
+  
+  error_df$SD_error[i] <- sd_pct_error
+  error_df$n_samp_error[i] <- n_pct_error
+  error_df$total_error[i] <- sd_pct_error + n_pct_error
+}
+
+#sort by total error and identify best dataset
+error_df <- error_df %>% arrange(total_error)
+head(error_df, 5)
+```
+
+_Attention!!!_
+
+The result above is based on the current imputation only. If another imputation were performed, the outcome could be entirely different. However, the fundamental concept remains the same (i.e., identify and select the imputation with the smallest total error).
+
+_**Process the Final Complete Dataset**_
+
+Having identified the optimal imputed dataset, we now integrate these imputed SD and n_samp values into our primary dataset and also perform final data transformations required for meta-analysis, including calculating `yi` (log-transformed KM-imputed Mean) and `vi` (its corresponding sampling variance).
+
+```{r }
+#extract the best imputed dataset
+pest_imp_best <- complete(pest_imp, action = 15) 
+#this could be differ next time!
+
+#replace missing SD and n_samp in original dataset
+pest_imp2 <- pest_imp1
+pest_imp2$SD[SD_na] <- pest_imp_best$SD[SD_na]
+pest_imp2$n_samp[n_samp_na] <- pest_imp_best$n_samp[n_samp_na]
+
+#handle zero SD values (17 cases) to avoid log(0) errors
+epsilon <- min(pest_imp2$SD[pest_imp2$SD > 0], na.rm = TRUE)
+pest_imp2$SD[pest_imp2$SD == 0] <- epsilon
+
+#apply log transformation
+pest_imp2 <- pest_imp2 %>%
+  mutate(log_Mean = ifelse(!is.na(Mean), log(Mean), NA),
+         log_SD = ifelse(!is.na(SD), log(SD), NA),
+         log_DL = ifelse(!is.na(DL), log(DL), NA),
+         log_n_samp = ifelse(!is.na(n_samp), log(n_samp), NA))
+
+#prepare final analysis dataset with effect sizes
+pest_df_comp <- pest_imp2 %>%
+  mutate(study_id = as.factor(study_id),
+         es_id = as.factor(es_id),
+         pesticide = as.factor(pesticide),
+         food = as.factor(food),
+         food_group = as.factor(food_group),
+         yi = log_Mean,
+         vi = (log_SD / sqrt(log_n_samp))^2)
+
+#replace zero variances (84 cases) with smallest non-zero variance
+epsilon2 <- min(pest_df_comp$vi[pest_df_comp$vi > 0], na.rm = TRUE)
+pest_df_comp$vi[pest_df_comp$vi == 0] <- epsilon2
+
+#final formatting: nested structure and NA removal
+pest_df_comp <- pest_df_comp %>%
+  mutate(es_id = interaction(study_id, es_id, drop = TRUE)) %>%
+  drop_na(yi, vi, study_id, es_id, type, food_group, pesticide, food)
+
+#write.csv(pest_df_comp, "inputs/pest_df_comp.csv", row.names = FALSE)
+```
+
+# SI Section 4: Multilevel Meta-analysis and Meta-Regression
+
+This section presents a comprehensive meta-analytic framework to quantify pooled pesticide residue concentrations in foods sampled across Ethiopia and to explore heterogeneity using subgroup and moderator analyses. It also describes a specialized meta-analysis approach used to estimate pesticide residue concentrations for very specific combinations of pesticides and food types.
+
+## Model Structure and Objectives
+
+Environmental monitoring data frequently exhibit multiple levels of dependence, which traditional meta-analysis might not adequately address. For instance, typical to pesticide residue data, this dependence could result from food samples collected across various categories, locations, or different time periods that are analyzed using varying methodologies and reported across different studies. Multilevel meta-analysis offers a powerful statistical technique for synthesizing such complex datasets, along with a better understanding of sources of variability, leading to more reliable and informative conclusions for environmental management and policy (Nakagawa, Yang, et al., 2023). 
+
+Detailed background and practical applications of MMA are provided elsewhere (Assink and Wibbelink, 2016; Harrer et al., 2021; Nakagawa, Yang, et al., 2023; Van den Noortgate et al., 2013).
+
+Given the hierarchical nature of our data, where multiple pesticide residue measurements (effect sizes) are nested within individual studies, we implemented _three-level multilevel meta-analysis (MMA) models_ using the `rma.mv()` function from the `metafor` package. For all models, we used _robust variance estimation (RVE)_ via the `clubSandwich` package to account for potential small-sample bias and clustering by study. 
+
+In summary, our three-level MMA model accounts for:
+
+- _Level 1 (Sampling Variance):_ The inherent precision (or lack thereof) of each individual data point (effect size), provided as `vi`.
+
+- _Level 2 (Within-Study Variance):_ Variability among pesticide data points (effect sizes) collected within the same study.
+
+- _Level 3 (Between-Study Variance):_ Variability among the true effects of different studies.
+
+We followed a three-tier modeling strategy:
+
+- _Model 1_: Intercept-only model to estimate the overall pooled mean concentration across all foods and pesticides.
+
+- _Model 2_: Subgroup models by `pesticide use type` and `food group`, to examine variation across key categorical variables.
+
+- _Model 3_: Unimoderator meta-regressions (ML-estimated) for model comparison using `Likelihood Ratio Tests (LRT)`.
+
+- _Model 4_: Final REML-fitted unimoderator models with RVE to report moderator effects and heterogeneity statistics ($I^2$ and $R^2$).
+
+
+## Overall and Subgroup Meta-analysis
+
+The overall pooled mean pesticide concentration was estimated using a three-level meta-analytic model with no moderators (`Model1`). Subgroup models (`Model2.1` and `Model2.2`) introduced fixed effects for pesticide use type and food group, respectively. All models used Restricted Maximum Likelihood (REML) for variance estimation.
+
+```{r }
+#Model1: Overall effect (intercept only)
+Model1 <- rma.mv(yi = yi, V = vi,
+                 random = list(~1 | study_id, ~1 | es_id),
+                 data = pest_df_comp, test = "t", method = "REML")
+
+#Model2: Pesticide use type and food group subgroups
+Model2.1 <- rma.mv(yi = yi, V = vi, 
+                   mods = ~ type -1,
+                   random = list(~1 | study_id, ~1 | es_id),
+                   data = pest_df_comp, test = "t", method = "REML")
+
+Model2.2 <- rma.mv(yi = yi, V = vi, 
+                 mods = ~ food_group -1,
+                 random = list(~1 | study_id, ~1 | es_id),
+                 data = pest_df_comp, test = "t", method = "REML")
+
+#apply RVE
+Model1_rve <- robust(Model1, cluster = pest_df_comp$study_id, clubSandwich = TRUE, adjust = TRUE)
+Model2.1_rve <- robust(Model2.1, cluster = pest_df_comp$study_id, clubSandwich = TRUE, adjust = TRUE)
+Model2.2_rve <- robust(Model2.2, cluster = pest_df_comp$study_id, clubSandwich = TRUE, adjust = TRUE)
+
+#calculate I²
+Model1_i2 <- i2_ml(Model1_rve)
+Model2.1_i2 <- i2_ml(Model2.1_rve)
+Model2.2_i2 <- i2_ml(Model2.2_rve)
+
+#view summary
+summary(Model1_rve)
+summary(Model2.1_rve)
+summary(Model2.2_rve)
+```
+
+As shown in the summary above, the overall pooled log-concentration was _1.98 µg/kg (1.49, 2.46)_. Heterogeneity was substantial _(52% between-study and 48% with-in study)_ and significant variability was also observed across _use type and food group_. The results confirm our hypothesis _H1!_ and also highlights the need for further meta-regression analysis to identify specific predictor moderators.
+
+## Uni-Moderator Meta-Regression Analysis (Model Comparison via ML)
+
+To identify significant moderators of heterogeneity, we used `Maximum Likelihood (ML)` estimation in Model 3. This choice was driven by the need to compare nested models via _Likelihood Ratio Tests (LRTs)_. Each unimoderator model _(i.e., instrument, food origin, region, zone, use type, food group)_ was compared to the null model. A significant LRT (p < 0.05) indicates that the moderator explains a significant portion of the heterogeneity.
+
+```{r }
+#null model
+Model_null <- rma.mv(yi, vi,
+                     random = list(~ 1 | study_id, ~ 1 | es_id),
+                     data = pest_df_comp, test = "t", method = "ML")
+
+#Model3: ML moderator models
+Model3.1 <- rma.mv(yi, vi, mods = ~ instrument -1,
+                   random = list(~ 1 | study_id, ~ 1 | es_id),
+                   data = pest_df_comp, test = "t", method = "ML")
+
+Model3.2 <- rma.mv(yi, vi, mods = ~ food_origin -1,
+                   random = list(~ 1 | study_id, ~ 1 | es_id),
+                   data = pest_df_comp, test = "t", method = "ML")
+
+Model3.3 <- rma.mv(yi, vi, mods = ~ region -1,
+                   random = list(~ 1 | study_id, ~ 1 | es_id),
+                   data = pest_df_comp, test = "t", method = "ML")
+
+Model3.4 <- rma.mv(yi, vi, mods = ~ zone -1,
+                   random = list(~ 1 | study_id, ~ 1 | es_id),
+                   data = pest_df_comp, test = "t", method = "ML")
+
+Model3.5 <- rma.mv(yi, vi, mods = ~ type -1,
+                   random = list(~ 1 | study_id, ~ 1 | es_id),
+                   data = pest_df_comp, test = "t", method = "ML")
+
+Model3.6 <- rma.mv(yi, vi, mods = ~ food_group -1,
+                   random = list(~ 1 | study_id, ~ 1 | es_id),
+                   data = pest_df_comp, test = "t", method = "ML")
+
+#model comparison (Residuals/ANOVA)
+model_comp <- list(instrument = anova(Model3.1, Model_null),
+                   food_origin = anova(Model3.2, Model_null),
+                   region = anova(Model3.3, Model_null),
+                   zone = anova(Model3.4, Model_null),
+                   type = anova(Model3.5, Model_null),
+                   food_group = anova(Model3.6, Model_null))
+print(model_comp)
+```
+
+Uni-Moderator ML fitted meta-regression models showed that _food origin, sampling zone, pesticide use type, and food group_ are the significant predictors/moderators of pesticide residue concentrations in Ethiopian foods. The result provide strong support for our hypothesis _H2!_
+
+## Uni-Moderator Meta-Regression Analysis (REML-Fitted Models)
+
+The significant moderators identified from Model 3 were re-fitted using REML (Model 4) to generate final estimates of moderator effects. RVE was again applied to ensure robust inference. For each model, we estimated $I^2$ values to quantify heterogeneity at the study and effect size levels and $R^2$ values to indicate the proportion of between-study heterogeneity explained by the moderator.
+
+```{r, results='hide', message=FALSE}
+#Model4: REML moderator models
+Model4.1 <- rma.mv(yi, vi, mods = ~ instrument -1,
+                   random = list(~ 1 | study_id, ~ 1 | es_id),
+                   data = pest_df_comp, test = "t", method = "REML")
+
+Model4.2 <- rma.mv(yi, vi, mods = ~ food_origin -1,
+                   random = list(~ 1 | study_id, ~ 1 | es_id),
+                   data = pest_df_comp, test = "t", method = "REML")
+
+Model4.3 <- rma.mv(yi, vi, mods = ~ region -1,
+                   random = list(~ 1 | study_id, ~ 1 | es_id),
+                   data = pest_df_comp, test = "t", method = "REML")
+
+Model4.4 <- rma.mv(yi, vi, mods = ~ zone -1,
+                        random = list(~ 1 | study_id, ~ 1 | es_id),
+                        data = pest_df_comp, test = "t", method = "REML")
+
+#apply RVE
+Model4.1_rve <- robust(Model4.1, cluster = pest_df_comp$study_id, clubSandwich = TRUE, adjust = TRUE)
+Model4.2_rve <- robust(Model4.2, cluster = pest_df_comp$study_id, clubSandwich = TRUE, adjust = TRUE)
+Model4.3_rve <- robust(Model4.3, cluster = pest_df_comp$study_id, clubSandwich = TRUE, adjust = TRUE)
+Model4.4_rve <- robust(Model4.4, cluster = pest_df_comp$study_id, clubSandwich = TRUE, adjust = TRUE)
+
+#calculate I² and R²
+Model4.1_i2 <- i2_ml(Model4.1_rve)
+Model4.2_i2 <- i2_ml(Model4.2_rve)
+Model4.3_i2 <- i2_ml(Model4.3_rve)
+Model4.4_i2 <- i2_ml(Model4.4_rve)
+
+Model4.1_r2 <- r2_ml(Model4.1_rve)
+Model4.2_r2 <- r2_ml(Model4.2_rve)
+Model4.3_r2 <- r2_ml(Model4.3_rve)
+Model4.4_r2 <- r2_ml(Model4.4_rve)
+Model4.5_r2 <- r2_ml(Model2.1_rve)
+Model4.6_r2 <- r2_ml(Model2.2_rve)
+
+#view summary
+summary(Model4.1_rve)
+summary(Model4.2_rve)
+summary(Model4.3_rve)
+summary(Model4.4_rve)
+```
+
+Uni-Moderator REML fitted meta-regression models showed that _Food Origin_ explained a substantial 16.3% of the observed heterogeneity ($R^2$), followed by _food group_ (7.9%), _zone_ (5.6%) and _pesticide type_ (1.9%). The higher concentrations were found in foods under 'Others' category (e.g., honey, khat), and in regions such as South and Southwest. Furthermore, some zones like Bench-Sheko, Gurage, and Hararge exhibited particularly elevated levels, whereas Ilu Aba Bora showed a very low concentration.
+
+## Stratified Meta-Analysis of Pesticide–Food Combinations
+
+Instead of fitting one large, complex multilevel model for all data, we fitted _a two-level random-effects models (also known as classical random-effects models)_, many smaller, independent meta-analysis models _(n= 251 models)_, each for a unique pesticide–food pair with effect sizes greater than 2 to get a very granular estimations. The approach uses the `rma.uni()` function from the `metafor` package in a stratified manner. This was preferable to `MMA, rma.mv()` due to small effect sizes $k$, where higher-level random effects may not be estimable.
+
+```{r }
+#create a column indicating the pesticide-food combination
+pest_df_comp <- pest_df_comp %>%
+  mutate(pest_food_combo = paste(pest_met, food, sep = "_"))
+
+#split data by pesticide-food combination
+combo_list <- split(pest_df_comp, pest_df_comp$pest_food_combo)
+
+#fit rma.uni for each group
+Model.uni <- map(combo_list, function(df) {
+  tryCatch({
+    if (nrow(df) >= 2) {
+      rma.uni(yi = yi, vi = vi, 
+              data = df, test = "t", 
+              method = "REML")
+    } else {NA}
+  }, error = function(e) {NA})
+})
+
+#extract summary info from each model
+summary_table <- map_df(names(Model.uni), function(name) {
+  model <- Model.uni[[name]]
+  if (inherits(model, "rma")) {
+    tibble(pest_food_combo = name, 
+           k = model$k,
+           estimate = model$b[1],
+           se = model$se[1],
+           ci_lb = model$ci.lb,
+           ci_ub = model$ci.ub,
+           pval = model$pval[1],
+           tau2 = model$tau2)
+  } else {
+    tibble(pest_food_combo = name, k = NA, estimate = NA, se = NA, ci_lb = NA, ci_ub = NA, pval = NA, tau2 = NA)
+  }
+})
+```
+
+## Extract Model Summaries for Reporting
+
+We extracted coefficients, standard errors, p-values, and heterogeneity statistics ($I^2$) from the fitted RVE models. Estimates are back-transformed from the log scale to the original concentration (µg/kg) for easier interpretation, along with their 95% confidence intervals. Additionally, the number of effect sizes (k) and unique studies (N) are gathered for each subgroup.
+
+_**List and label the models**_
+
+```{r }
+model_list <- list(Model1.1 = Model1_rve, Model2.1 = Model2.1_rve, 
+                   Model2.2 = Model2.2_rve, Model4.1 = Model4.1_rve,
+                   Model4.2 = Model4.2_rve, Model4.3 = Model4.3_rve,
+                   Model4.4 = Model4.4_rve)
+
+i2_list <- list(Model1.1 = Model1_i2, Model2.1 = Model2.1_i2, 
+                Model2.2 = Model2.2_i2, Model4.1 = Model4.1_i2,
+                Model4.2 = Model4.2_i2, Model4.3 = Model4.3_i2,
+                Model4.4 = Model4.4_i2)
+
+r2_list <- list(Model2.1 = Model4.5_r2, Model2.2 = Model4.6_r2, 
+                Model4.1 = Model4.1_r2, Model4.2 = Model4.2_r2,
+                Model4.3 = Model4.3_r2, Model4.4 = Model4.4_r2)
+
+model_labels <- names(model_list)
+```
+
+_**Extract Estimates**_
+
+```{r }
+#function to extract i2
+extract_i2 <- function(model_rve, model_i2, model_label) {
+  est <- broom::tidy(model_rve)
+  het <- as.data.frame(model_i2)
+  
+  #repeat I² values to match number of terms
+  het_full <- data.frame(
+    i2.lvl2 = rep(het[2, 1], nrow(est)),
+    i2.lvl3 = rep(het[3, 1], nrow(est)),
+    i2.tot = rep(het[1, 1], nrow(est)))
+  
+  bind_cols(est, het_full) %>% mutate(Model = model_label)
+}
+
+#extract summary list as dataframe (back transform log)
+summary_list <- purrr::pmap(list(model_list, i2_list, model_labels),
+                            extract_i2)
+
+summary_df <- bind_rows(summary_list) %>%
+  mutate(Mean = exp(estimate), SE = std.error,
+         LL_95 = exp(estimate - 1.96 * std.error), 
+         UL_95 = exp(estimate + 1.96 * std.error), 
+         pval = round(p.value, 4), i2.lvl2 = round(i2.lvl2, 2), 
+         i2.lvl3 = round(i2.lvl3, 2), i2.tot = round(i2.tot, 2),
+         Mean = round(Mean, 2), LL_95 = round(LL_95, 2), UL_95 = round(UL_95, 2))
+```
+
+_**Process Estimates**_
+
+```{r, warning = FALSE}
+#study-Level k and N per subgroup
+get_k_N <- function(data, moderator_col = NULL) {
+  if (is.null(moderator_col)) {
+    tibble(term = "Overall", k = nrow(data), N = n_distinct(data$study_id))
+  } else {
+    data %>%
+      group_by(.data[[moderator_col]]) %>%
+      summarise(k = n(), N = n_distinct(study_id), .groups = "drop") %>%
+      rename(term = .data[[moderator_col]])
+  }
+}
+
+#collect k and N
+kN_list <- list(
+  Model1.1 = get_k_N(pest_df_comp),
+  Model2.1 = get_k_N(pest_df_comp, "type"),
+  Model2.2 = get_k_N(pest_df_comp, "food_group"),
+  Model4.1 = get_k_N(pest_df_comp, "instrument"),
+  Model4.2 = get_k_N(pest_df_comp, "food_origin"),
+  Model4.3 = get_k_N(pest_df_comp, "region"),
+  Model4.4 = get_k_N(pest_df_comp, "zone"))
+
+kN_combined <- bind_rows(purrr::imap(kN_list, ~ mutate(.x, Model = .y))) %>%
+  rename(Subgroup = term)
+
+Table1 <- summary_df %>%
+  mutate(
+    term = as.character(term),
+    term = ifelse(term == "intrcpt", "Overall", term),
+    Model_Type = case_when(
+      str_detect(Model, "^Model1") ~ "Overall Estimation",
+      str_detect(Model, "^Model2") ~ "Subgroup Analysis",
+      str_detect(Model, "^Model4") ~ "Moderator Meta-Regression"),
+    Moderator = case_when(
+      Model == "Model1.1" ~ "All Pesticides",
+      Model == "Model2.1" ~ "Use Type",
+      Model == "Model2.2" ~ "Food Group",
+      Model == "Model4.1" ~ "Instrument",
+      Model == "Model4.2" ~ "Food Origin",
+      Model == "Model4.3" ~ "Region",
+      Model == "Model4.4" ~ "Zone",
+      TRUE ~ "Unknown"),
+    Subgroup = str_remove(
+      term, "^(type|food_group|instrument|region|zone|food_origin)"),
+    Subgroup = ifelse(
+      Moderator == "All Pesticides", "Overall", Subgroup)) %>%
+  left_join(kN_combined, by = c("Model", "Subgroup")) %>%
+  dplyr::select(Model_Type, Model, Moderator, Subgroup, N, k, Mean, LL_95,
+                UL_95, pval, i2.lvl2, i2.lvl3, i2.tot)
+
+#write.csv(Table1, "output/Table1_Estimates_Summary.csv", row.names = FALSE)
+```
+
+_**Process Model comparison**_
+
+```{r }
+#extract model comparison results
+r2_values <- sapply(r2_list, function(x){
+  if (inherits(x, "numeric")) round(x[1], 3) else NA
+  })
+
+Table2 <- tibble::tibble(
+  Moderator = names(model_comp),
+  LRT = sapply(model_comp, function(x) round(x$LRT, 2)),
+  pval = sapply(model_comp, function(x) round(x$pval, 4)),
+  R2 = sapply(r2_values, function(x) if (is.numeric(x)) round(x[1], 3) else NA))
+
+#write.csv(Table2, "output/Table2_Model_Comparison.csv", row.names = FALSE)
+```
+
+_**Process Stratified Estimates**_
+
+```{r }
+#pooled pesticide-food dataset
+pest_food_df <- summary_table %>%
+  separate(col = pest_food_combo, into = c("pesticide", "food"), 
+           sep = "_", remove = FALSE) %>%
+  mutate(Mean = round(exp(estimate), 2), 
+         SE = round(exp(se), 2),
+         LL_95 = round(exp(ci_lb), 2),
+         UL_95 = round(exp(ci_ub), 2))
+
+#calculate total sample sizes
+pest_food_df_n <- pest_df_comp %>%
+  mutate(n_samp = n_samp) %>%
+  group_by(pest_food_combo) %>%
+  summarise(n_samp = sum(n_samp, na.rm = TRUE), 
+            .groups = 'drop')
+
+pest_food_df <- pest_food_df %>%
+  left_join(pest_food_df_n, by = "pest_food_combo") %>%
+  mutate(SD = round(SE * sqrt(n_samp), 2)) #Calculate SD from SE
+
+#add pesticide and food metadata from original dataset
+pest_metadata <- pest_df_comp %>% 
+  dplyr::select(pesticide = pest_met, type, class) %>%
+  distinct()
+
+food_metadata <- pest_df_comp %>% 
+  dplyr::select(food, food_origin, food_group) %>% 
+  distinct()
+
+Table3<- pest_food_df %>%
+  left_join(pest_metadata, by = "pesticide") %>%
+  left_join(food_metadata, by = "food") %>%
+  dplyr::select(pesticide, type, class, food, food_origin, food_group, 
+         k, n_samp, Mean, SD) %>% 
+  filter(!is.na(k)) %>% droplevels()
+
+#write.csv(Table3, "output/Table3_pest_food.csv", row.names = FALSE)
+```
+
+_**Display Tables**_
+
+```{r }
+##Table 1 (see Main text!!)
+
+#Table1_disp <- Table1 %>% dplyr::select(-Model_Type, -Model, -i2.tot)
+
+#flextable(Table1_disp) %>%
+#  set_caption("Pooled Estimates (μg/kg) and Heterogeneity Across Models") %>%
+#  autofit() %>%
+#  theme_booktabs() %>%
+#  align(align = "left", part = "all") %>%
+#  fontsize(size = 8, part = "all")
+
+##Table 2 (see Main text!!)
+
+#print(Table2)
+
+##Table 3
+table3_disp <- Table3 %>% 
+  dplyr::select(Pesticide = pesticide, Food = food, K = k, Mean, SD) %>%
+  arrange(desc(K), desc(Mean))
+
+#flextable(table3_disp) %>%
+#  set_caption("Pooled Pesticide–Food Combination Estimates (μg/kg)") %>%
+#  autofit() %>%
+#  theme_booktabs() %>%
+#  align(align = "left", part = "all") %>%
+#  fontsize(size = 8, part = "all")
+
+head(table3_disp)
+```
+
+_**OrchaRd Plots**_
+
+OrchaRd plots are powerful visualizations for meta-analysis, showing overall and subgroup-specific pooled estimates, their confidence intervals, and the individual effect sizes within each subgroup [https://doi.org/10.32942/X2QC7]. They help in intuitively understanding the magnitude and variability of effects across different moderator categories. We ploted estimates of significant residue concentration predictors.
+
+```{r, message=FALSE, fig.cap="Pooled residue summary according to significant predictors (log-mean)", fig.width=6.5, fig.height=8, dpi=800}
+
+op1<-orchard_plot(Model4.2_rve, mod = "food_origin", group = "study_id", 
+                  k = TRUE, g = TRUE, alpha = 0.7, xlab = "") +
+  theme(axis.text.y = element_text(angle = 360, hjust = 1)) +
+  theme(legend.position = "none", legend.direction = "horizontal", 
+        legend.title = element_text(size = 8),
+        legend.text = element_text(size = 8))
+
+op2<- orchard_plot(Model2.2_rve, mod = "food_group", group = "study_id", 
+                   k = TRUE, g = TRUE, alpha = 0.7, xlab = "") +
+  theme(axis.text.y = element_text(angle = 360, hjust = 1)) +
+  theme(legend.position = "none", legend.direction = "horizontal", 
+        legend.title = element_text(size = 8),
+        legend.text = element_text(size = 8))
+
+op3<- orchard_plot(Model4.4_rve, mod = "zone", group = "study_id", 
+                   k = TRUE, g = TRUE, alpha = 0.7, xlab = "") +
+  theme(axis.text.y = element_text(angle = 360, hjust = 1)) +
+  theme(legend.position = "none",legend.direction = "horizontal", legend.title = element_text(size = 8), legend.text = element_text(size = 8))
+
+op4<- orchard_plot(Model2.1_rve, mod = "type", group = "study_id", 
+                   k = TRUE, g = TRUE, alpha = 0.7, xlab = "") +
+  theme(axis.text.y = element_text(angle = 360, hjust = 1)) +
+  theme(legend.position = "none",legend.direction = "horizontal", legend.title = element_text(size = 8), legend.text = element_text(size = 8))
+
+op<- (op1/op4/op2|op3) + plot_annotation(tag_levels = "A") & 
+  theme(plot.title = element_text(size = 12, face = "bold", hjust = 0),
+        plot.tag = element_text(size = 10, face = "bold"))
+
+#ggsave("output/Residue_Summary.png", plot = op, width = 7, height = 8, units = "in", dpi = 800)
+op
+```
+
+# SI Section 5: Pesticide Safety and Chronic Health Risk Assessments
+
+This section focuses on evaluating the safety of pesticide residue concentration in Ethiopian foods. We perform two main types of assessments: Maximum Residue Limit (MRL) Exceedance Analysis and Chronic Non-Cancer and Cancer Risk Assessments.
+
+## Data Sources and Preparation
+
+Input data for safety assessments were processed and prepared as provided in `R_Script2`. Residue data was from the pooled pesticide–food concentration conducted using stratified meta-analysis (SI Section 4). Ethiopian-specific food consumption rates were retrieved from the publicly available fourth round (2018/2019) socioeconomic survey panel dataset (https://doi.org/10.48529/k739-c548). This dataset, nationally representative, provided consumption data from 7,527 households. A total of 20,932 unique survey results matching 17 food types in our dataset (excluding drinking water) were used to calculate national mean and standard deviation food consumption rates. Toxicity Reference Values (TRV, defined as chronic ADI or RfD for ingestion in mg/kg/day) were obtained from the EU pesticide database (https://food.ec.europa.eu/plants/pesticides/eu-pesticides-database_en) and US EPA IRIS database (https://www.epa.gov/iris), with the lowest value selected conservatively. Oral Slope Factors (OSF, in (mg/kg/day)−1), for carcinogenic pesticides, were primarily retrieved from the IRIS database.
+
+
+```{r }
+#load MRL dataset
+pest_mrl <- read.csv(here("inputs/pest_mrl_df.csv")) #see R_Script2
+
+#add MRL to pooled residue concentration
+pest_mrl_df<- Table3 %>%
+  mutate(pesticide = str_to_lower(str_squish(pesticide)),
+         food = str_to_lower(str_squish(food))) %>%
+  left_join(pest_mrl, by = c("pesticide", "food")) %>%
+  mutate(MRL_conv = (MRL * 1000)) %>%
+  filter(!is.na(MRL))
+
+#Toxicity Reference Values and Food consumption rate
+tox_dat<- read.csv(here("inputs/pest_trv_df.csv"))  
+fc_dat<- read.csv(here("inputs/food_consumption.csv"))
+
+#prepare Residue Dataset (convert µg/kg to mg/kg)
+res_dat <- Table3 %>%
+  mutate(across(c(pesticide, food), ~str_to_lower(str_squish(.)))) %>%
+  mutate(Ci = Mean / 1000, Ci_sd = SD / 1000) %>%
+  left_join(tox_dat %>% dplyr::select(pesticide, TRV, OSF), 
+            by = "pesticide") %>%
+  left_join(fc_dat %>% dplyr::select(food, CRi, CRi_sd), 
+            by = "food") %>%
+  mutate(pesticide = str_to_title(pesticide), 
+         food = str_to_title(food))
+```
+
+## Maximum Residue Limit (MRL) Exceedance Analysis
+
+To evaluate the regulatory compliance of foodborne pesticide residues in Ethiopia, we assessed the extent to which the pooled pesticide-food mean concentrations exceeded established Maximum Residue Limits (MRLs). MRLs are legally defined thresholds for the allowable concentration of a pesticide in food, typically set to ensure consumer safety. The pooled mean concentrations (μg/kg) from our meta-analysis were compared against MRL values compiled for 208 of 351 pesticide-food combinations from regulatory sources (EFSA, USDA). We summarized the overall proportion of exceedances, as well as the distribution of exceedances across pesticide compounds and food commodities. Cumulative distribution functions of the log-transformed MRL ratios were visualized to highlight subgroup-specific differences. A ratio >1 indicates exceedance!
+
+We computed the MRL exceedance ratio as:
+
+$$
+\text{MRL Exceedance Ratio} = \frac{C_i}{\text{MRL}_i}
+$$
+
+_where:_
+
+- $C_i$ is the pooled residue concentration for pesticide–food combination $i$
+
+- $\text{MRL}_i$ is the corresponding MRL. 
+
+```{r }
+#compute MRL Exceedance ratio 
+pest_mrl_exced <- pest_mrl_df %>%
+  mutate(MRL_exced = Mean/MRL_conv, exceed = MRL_exced > 1)
+
+#what is the overall MRL exceedance rate?
+mrl_overall<- pest_mrl_exced %>% summarise(k = n(),
+                             Above = sum(exceed), 
+                             `%` = round(Above/k*100, 2))
+print(mrl_overall)
+
+#MRL exceedance according to pesticides and food groups?
+pest_mrl_stat<- pest_mrl_exced %>% group_by(pesticide) %>%
+  summarise(k = n(), Above = sum(exceed), `%` = round(Above/k* 100, 2)) %>%
+  ungroup()
+
+#pest_mrl_stat %>% filter(`%` == 0) %>% tally(name = "N pesticides")   #28
+#pest_mrl_stat %>% filter(`%` > 50) %>% tally(name = "N pesticides")   #6
+#pest_mrl_stat %>% filter(`%` == 100) %>% tally(name = "N pesticides") #2
+
+food_mrl_stat<- pest_mrl_exced %>% group_by(food_group) %>%
+  summarise(k = n(), Above = sum(exceed), `%` = round(Above/k* 100, 2)) %>%
+  ungroup()
+
+#food_mrl_stat %>% filter(`%` == 0) %>% tally(name = "N pesticides")   #3
+#food_mrl_stat %>% filter(`%` > 50) %>% tally(name = "N pesticides")   #5
+#food_mrl_stat %>% filter(`%` == 100) %>% tally(name = "N pesticides") #0
+```
+
+Approximately _26.5%, 55 out of 208 of pesticide-food combinations exceeded allowed MRL._ 28 out of 51 pesticides with MRL were found to be safe (below allowed MRL) and 2 pesticides (i.e., dimetachlor and heptachlor epoxide) had a 100% exceedance rate. On the other hand, all of the food groups exceeded MRL, ranging from 11% to 57%, except for foods in meat group (i.e., animal and fish meat). The overall MRL excedance ratio is summarized the following Figure (see Main text, Figure 2). The Figure illustrates the overall and subgroup-specific cumulative distribution of the logarithm of the MRL exceedance ratio, with a dashed red line indicating the MRL exceedance threshold (see the main text).
+
+```{r, message=FALSE, fig.cap="Cumulative distribution function of logarithm of MRL exceedance ratio", fig.width=6.5, fig.height=6, dpi=800}
+##Figure 2
+plot_data <- pest_mrl_exced %>%
+  filter(!is.na(MRL_exced), MRL_exced > 0, is.finite(log(MRL_exced)))
+
+mrl1 <- ggplot(plot_data, aes(log(MRL_exced))) +
+  stat_ecdf(geom = "smooth", size = 1) +
+  geom_vline(xintercept = log(1), linetype = "dashed", color = "red", size = 0.5) +
+  scale_color_npg() +
+  labs(x = "", y = "") +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(face = "bold", size = 6),
+        axis.text.y = element_text(face = "bold", size = 6),
+        plot.title = element_text(face = "bold", size = 9, hjust = 0.5))
+
+mrl2 <- ggplot(plot_data, aes(x = log(MRL_exced), color = food_group, shape = food_group)) +
+  stat_ecdf(geom = "point", size = 1.5, alpha = 0.7) +
+  geom_vline(xintercept = log(1), linetype = "dashed", color = "red", size = 0.5) +
+  scale_color_npg() +
+  labs(x = "", y = "") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(face = "bold", size = 9, hjust = 0.5),
+    axis.text.x = element_text(face = "bold", size = 6),
+    axis.text.y = element_text(face = "bold", size = 6),
+    legend.position = c(0.2, 0.83),
+    legend.direction = "vertical",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 6.5),
+    legend.background = element_rect(fill = alpha("white", 0.5), color = NA))
+
+mrl3 <- ggplot(plot_data, aes(x = log(MRL_exced), color = type, shape = type)) +
+  stat_ecdf(geom = "point", size = 1.5, alpha = 0.7) +
+  geom_vline(xintercept = log(1), linetype = "dashed", color = "red", size = 0.5) +
+  scale_color_npg() +
+  labs(x = "", y = "") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(face = "bold", size = 9, hjust = 0.5),
+    axis.text.x = element_text(face = "bold", size = 6),
+    axis.text.y = element_text(face = "bold", size = 6),
+    legend.position = c(0.2, 0.8),
+    legend.direction = "vertical",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 6.5),
+    legend.background = element_rect(fill = alpha("white", 0.5), color = NA)
+  )
+
+mrl_p <- (mrl1/mrl3|mrl2) + plot_annotation(tag_levels = "A") & 
+  theme(plot.tag = element_text(size = 10, face = "bold"))
+
+#mrl_p #see Main text, Figure 2!
+
+#ggsave("output/MRL_exceedance.png", plot = mrl_p, width = 6.5, height = 6, units = "in", dpi = 800)
+```
+
+## Non-Cancer and Cancer Risk Assessment
+
+To comprehensively assess the potential chronic dietary health risks associated with pesticide exposure, we conducted probabilistic non-cancer and cancer risk assessments for Ethiopian adults. These assessments were founded on estimating daily dietary pesticide exposure, derived from the pooled unique pesticide-food concentrations (determined through meta-analysis) and Ethiopian daily food consumption rates. Toxicity Reference Values (TRVs) for non-cancer effects and Oral Slope Factors (OSFs) for cancer effects were utilized as critical toxicological benchmarks. For exposure assessment, a `worst-case scenario` was assumed, where food processing methods (e.g., washing, cooking) were presumed to have no effect on pesticide residue levels.
+
+A `Monte Carlo simulation` _(n=10,000 iterations)_ combined with `Latin hypercube sampling (LHS)` was employed to robustly account for the inherent variability and uncertainty in the input parameters. In each simulation iteration, values were sampled from the defined probability distributions for pesticide concentration, food consumption, and body weight to compute Estimated Daily Intake (EDI), Hazard Quotient (HQ), and Lifetime Cancer Risk (LCR). From the resulting simulated distributions, the 5th, 50th (median), and 95th percentiles of HQ and LCR were extracted. Furthermore, exceedance probabilities were calculated to quantify the likelihood that estimated risks surpass the unacceptable thresholds. `HQ` values greater than 1 indicate a potential for non-cancer health effects, while `LCR` values greater than $10^{-4}$ (1 in 10,000) are considered a potential public health concern per U.S. EPA risk benchmarks.
+
+The following equations were used to calculate exposure and risks:
+
+Estimated Daily Intake (EDI):
+
+$$
+\text{EDI}_{i,j} = \frac{C_{i,j} \times CR_{i,j}}{BW}
+$$
+
+Hazard Quotient (HQ):
+
+$$
+HQ = \frac{\text{EDI}_{i,j}}{TRV}
+$$
+
+Lifetime Cancer Risk (LCR):
+
+$$
+LCR_i = \text{EDI}_{i,j} \times OSF
+$$
+
+_where:_
+
+- $C_{i,j}$: Concentration of pesticide $j$ in food item $i$ (mg/kg) 
+
+- $CR_{i,j}$: Consumption rate of food item $i$ (kg/day)  
+
+- $BW$: Body weight of the individual (kg)  
+
+- $TRV$: Chronic oral toxicity reference value for non-cancer effects (mg/kg/day) 
+
+- $OSF$: Oral slope factor for cancer potency (mg/kg/day⁻¹) 
+
+Input distribution for probabilistic estimations were defined as follows:
+
+- $C_i$ and $CR_i$ were modeled using log-normal distributions, characterized by arithmetic means and standard deviations derived from meta-analytic estimates and food consumption survey data.
+
+- $BW$ was modeled using a truncated normal distribution ($\mu = 60$, $\sigma = 6$, truncated to \[30, 120] kg).
+
+Log-normal parameters were derived as:
+
+$$
+\mu_{\log} = \log\left(\frac{\mu^2}{\sqrt{\sigma^2 + \mu^2}}\right), \quad
+\sigma_{\log} = \sqrt{\log\left(1 + \frac{\sigma^2}{\mu^2}\right)}
+$$
+
+_where:_
+
+- $\mu_{\log}$: The mean of the natural logarithm of the distribution (log-mean).
+
+- $\sigma_{\log}$: The standard deviation of the natural logarithm of the distribution (log-standard deviation).
+
+- $\mu$: The arithmetic mean of the original (untransformed) data.
+
+- $\sigma$: The arithmetic standard deviation of the original (untransformed) data.
+
+_**Run Probabilistic Risk Estimations**_
+
+```{r }
+#set constants
+BW_mean <- 60
+BW_sd <- 6
+n_sim <- 10000
+
+#helper function to get log-normal parameters
+get_lognorm_params <- function(mean, sd) {
+  if (is.na(mean) || is.na(sd) || mean <= 0 || sd <= 0) {
+    return(list(meanlog = NA, sdlog = NA))
+  }
+  meanlog <- log(mean^2 / sqrt(sd^2 + mean^2))
+  sdlog <- sqrt(log(1 + (sd / mean)^2))
+  list(meanlog = meanlog, sdlog = sdlog)
+}
+
+#functions to run risk estimates
+set.seed(123)
+
+simulate_pesticide_risk <- function(data) {
+  results_list <- vector("list", length = nrow(data))
+  
+  for (i in seq_len(nrow(data))) {
+    row <- data[i, ]
+    
+    #get log-normal parameters
+    ci_params <- get_lognorm_params(row$Ci, row$Ci_sd)
+    cri_params <- get_lognorm_params(row$CRi, row$CRi_sd)
+    
+    #skip if parameters cannot be computed
+    if (any(is.na(c(ci_params$meanlog, ci_params$sdlog,
+                    cri_params$meanlog, cri_params$sdlog)))) {
+      next
+    }
+    
+    #simulate samples
+    Ci_samples <- rlnorm(n_sim, ci_params$meanlog, ci_params$sdlog)
+    CRi_samples <- rlnorm(n_sim, cri_params$meanlog, cri_params$sdlog)
+    BW_samples <- rtruncnorm(n_sim, a = 30, b = 120, mean = BW_mean, sd = BW_sd)
+    
+    #calculating simulated values
+    EDI_samples <- (Ci_samples * CRi_samples) / BW_samples
+    HQ_samples <- EDI_samples / row$TRV
+    LCR_samples <- EDI_samples * row$OSF
+    
+    df <- tibble(
+      pesticide = row$pesticide,
+      food = row$food,
+      food_group = row$food_group,
+      sim_id = 1:n_sim,
+      EDI_sim = EDI_samples,
+      HQ_sim = HQ_samples,
+      LCR_sim = LCR_samples
+    )
+    
+    results_list[[i]] <- df
+  }
+  
+  bind_rows(results_list)
+}
+
+#run simulation
+res_risk_prob <- simulate_pesticide_risk(res_dat)
+```
+
+_**Results Summary**_
+
+```{r }
+risk_Table <- res_risk_prob %>%
+  group_by(pesticide, food) %>%
+  summarise(
+    EDI_prob = mean(EDI_sim, na.rm = TRUE),
+    HQ_p5 = quantile(HQ_sim, 0.05, na.rm = TRUE),
+    HQ_p50 = quantile(HQ_sim, 0.50, na.rm = TRUE),
+    HQ_p95 = quantile(HQ_sim, 0.95, na.rm = TRUE),
+    HQ_exceed = mean(HQ_sim > 1, na.rm = TRUE) * 100,
+    LCR_p5 = quantile(LCR_sim, 0.05, na.rm = TRUE),
+    LCR_p50 = quantile(LCR_sim, 0.50, na.rm = TRUE),
+    LCR_p95 = quantile(LCR_sim, 0.95, na.rm = TRUE),
+    LCR_exceed = mean(LCR_sim > 1e-4, na.rm = TRUE) * 100,
+    .groups = "drop")
+
+#write.csv(risk_Table, "output/Table_risk_summary1.csv", row.names = FALSE)
+```
+
+The cumulative distribution functions for HQ and LCR, along with the percentage of HQ and LCR exceedance rates aggregated by pesticide and food categories were summarized in the following Figure (see Main text, Figure 3).
+
+```{r, message=FALSE, fig.cap="Probabilistic health risk assessment of dietary pesticide exposure in Ethiopia", fig.width=10, fig.height=11, dpi=800}
+
+#Figure 3
+risk_plot1 <- res_risk_prob %>% filter(!is.na(HQ_sim))
+risk_plot2 <- res_risk_prob %>% filter(!is.na(LCR_sim))
+risk_pest1 <- risk_plot1 %>% group_by(pesticide) %>%
+  summarise(HQ_exceed = mean(HQ_sim > 1) * 100) %>%
+  filter(HQ_exceed >= 1) %>% ungroup()
+risk_pest2 <- risk_plot2 %>% group_by(pesticide) %>%
+  summarise(LCR_exceed = mean(LCR_sim > 1e-4) * 100,
+            .groups = "drop")
+risk_food1 <- risk_plot1 %>% group_by(food) %>%
+  summarise(HQ_exceed = mean(HQ_sim > 1) * 100,
+            .groups = "drop")
+risk_food2 <- risk_plot2 %>% group_by(food) %>%
+  summarise(LCR_exceed = mean(LCR_sim > 1e-4) * 100,
+            .groups = "drop")
+
+pr1<- ggplot(risk_plot1, aes(x = HQ_sim)) +
+  stat_ecdf(geom = "smooth", color = "blue", size = 1) +
+  geom_vline(xintercept = 1, linetype = "dashed", color = "red") +
+  scale_x_log10() + labs(x = "", y = "") + theme_bw()
+
+pr2<-ggplot(risk_plot2, aes(x = LCR_sim)) +
+  stat_ecdf(geom = "smooth", color = "darkgreen", size = 1) +
+  geom_vline(xintercept = 1e-4, linetype = "dashed", color = "red") +
+  scale_x_log10() + labs(x = "", y = "") + theme_bw()
+
+p_hq<- ggplot(risk_pest1, aes(x = reorder(pesticide, HQ_exceed), y = HQ_exceed)) +
+  geom_col(fill = "steelblue") + coord_flip() + 
+  labs(x = "", y = "") + theme_bw()
+
+p_lcr <- ggplot(risk_pest2, aes(x = reorder(pesticide, LCR_exceed), y = LCR_exceed)) +
+  geom_col(fill = "lightgreen") + coord_flip() +
+  labs(x = "", y = "") + theme_bw()
+
+f_hq <- ggplot(risk_food1, aes(x = reorder(food, HQ_exceed), y = HQ_exceed)) +
+  geom_col(fill = "steelblue") + coord_flip() +
+  labs(x = "", y = "") + theme_bw()
+
+f_lcr <- ggplot(risk_food2, aes(x = reorder(food, LCR_exceed), y = LCR_exceed)) +
+  geom_col(fill = "lightgreen") + coord_flip() +
+  labs(x = "", y = "") + theme_bw()
+
+pr<-pr1|pr2
+prp<-pr1|p_hq|f_hq
+prf<-pr2|p_lcr|f_lcr
+rplt<-(prp/prf) + plot_annotation(tag_levels = "A") & 
+  theme(plot.tag = element_text(size = 10, face = "bold"))
+
+#rplt #see Main Text, Figure 3!
+
+#ggsave("output/Risk_summary.png", plot = rplt, width = 10, height = 11, units = "in", dpi = 800)
+```
+
+_**Cumulative risks**_
+
+Beyond individual pesticide-food combination risks, it is crucial to assess the cumulative health risks from exposure to multiple pesticides and to understand the contributions of different food sources to this overall exposure.
+
+_Relative Contributions to EDI_
+
+To understand how different food items contribute to overall pesticide exposure, we compute the relative contribution of each food to the total EDI of a pesticide:
+
+$$
+P_{i,j} = \frac{\text{EDI}_{i,j}}{\text{EDI}_j}
+$$
+
+_where:_
+
+- $P_{i,j}$: Relative contribution of food item $i$ to total EDI of pesticide $j$  
+
+- $\text{EDI}_{i,j}$: EDI from food item $i$  
+
+- $\text{EDI}_j$: Total EDI from all food items for pesticide $j$ 
+
+```{r }
+#calculate mean EDI for each pesticide-food pair
+edi_summary <- res_risk_prob %>%
+  group_by(pesticide, food_group) %>%
+  summarise(EDI_mean = mean(EDI_sim, na.rm = TRUE), .groups = "drop")
+
+#calculate total EDI per pesticide
+total_edi <- edi_summary %>%
+  group_by(pesticide) %>%
+  summarise(EDI_total = sum(EDI_mean, na.rm = TRUE), .groups = "drop")
+
+#join and compute relative contribution
+relative_contributions <- edi_summary %>%
+  left_join(total_edi, by = "pesticide") %>%
+  mutate(P_ij = EDI_mean / EDI_total) %>%
+  arrange(desc(P_ij))
+
+#top contributors
+print(relative_contributions, 5)
+```
+
+_Hazard Index (HI)_
+
+The cumulative non-cancer risk is characterized by computing the Hazard Index (HI), which aggregates the Hazard Quotients (HQs) of multiple pesticides consumed through different foods. An HI > 1 may indicate a potential health concern.
+
+$$
+HI = \sum_{j=1}^{n} HQ_{i,j}
+$$
+
+_where:_
+
+- $n$: Number of pesticides considered  
+- $HQ_{i,j}$: Hazard quotient of pesticide $j$ in food item $i$
+
+```{r }
+#group by simulation and pesticide
+HI_per_sim <- res_risk_prob %>%
+  group_by(sim_id, pesticide) %>%
+  summarise(HQ_sum_per_pest_sim = sum(HQ_sim, na.rm = TRUE),
+            .groups = "drop") %>%
+  group_by(sim_id) %>%
+   #then group by simulation ID to get total HI for that sim
+  summarise(HI_sim_total = sum(HQ_sum_per_pest_sim, na.rm = TRUE),
+            .groups = "drop")
+
+#summarize the distribution of HI
+HI_summary <- HI_per_sim %>%
+  summarise(
+    HI_mean = mean(HI_sim_total, na.rm = TRUE),
+    HI_p5 = quantile(HI_sim_total, 0.05, na.rm = TRUE),
+    HI_p50 = quantile(HI_sim_total, 0.50, na.rm = TRUE),
+    HI_p95 = quantile(HI_sim_total, 0.95, na.rm = TRUE),
+    HI_exceed_1 = mean(HI_sim_total > 1, na.rm = TRUE) * 100,
+    .groups = "drop")
+
+#print(HI_summary)
+```
+
+# Publication Bias and Sensitivity Analysis
+
+Compare Exposure Estimates conducted with imputed dataset and missing dataset removed.
+
+Complete case >> removing NDs
+Use randomly selected imp dataset and average of imp dataset
+
