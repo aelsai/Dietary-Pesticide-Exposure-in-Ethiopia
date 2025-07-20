@@ -1,11 +1,3 @@
 # Dietary-Pesticide-Exposure-in-Ethiopia
 
-**To estimate health burden (in terms of DALYs) attributed pesticide exposure through dietary exposure in Ethiopia.**
-
-This study answers the following research questions:
-
--   Which food sources are highly contaminated by pesticides?
-
--   Which food sources contribute significantly to cancer and non-cancer health risks?
-
--   The highest DALY is attributed to which pesticide groups?
+Geographical biases in global food safety research skew understanding and policy toward high-income regions, perpetuating exposure and risk disparities that disproportionately burden the Global South, where inadequate monitoring and weak regulations leave the true magnitude of pesticide hazards unquantified. Sparse literature data can be synthesized via systematic review and meta-analysis in such settings, but conventional methods falter on hierarchical structures, left-censorship, missing data, variabilities, and uncertainties. To bridge these gaps, our study developed a novel multilevel meta-analytic Monte Carlo-based probabilistic risk assessment framework, modeling data dependencies and propagating uncertainties to generate robust, population-level dietary pesticide risk distributions, while employing state-of-the-art imputation for non-detects and missing values.
