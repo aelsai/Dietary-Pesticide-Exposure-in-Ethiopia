@@ -1,4 +1,35 @@
 
+
+##Duplication Removal
+#Two-step process was used for deduplication:
+#String-matching algorithm using `synthesisr` package
+#Rayyan duplication removal tool (https://www.rayyan.ai/)
+
+#String-matching algorithm using synthesisr
+#load and process RIS file
+ris_dat<- read_refs(here("search/Pest_ETH.ris"))
+#1539 articles
+ris_dat$title2 <- str_replace_all(ris_dat$title,"[:punct:]","") %>% 
+  str_replace_all(.,"[ ]+", " ") %>% tolower()
+ris_dat <- distinct(ris_dat, title2, .keep_all = TRUE)
+#dim(ris_dat)
+
+#remove partial matches in titles
+duplicates_string <- find_duplicates(ris_dat$title2, method = "string_osa", to_lower = TRUE, rm_punctuation = TRUE, threshold = 7)
+#manual_checks <- review_duplicates(ris_dat$title, duplicates_string)
+
+#extract unique references and drop title2 & n_duplicates
+ris_dat1 <- extract_unique_references(ris_dat, duplicates_string) %>%
+  dplyr::select(-title2, -n_duplicates)
+#1303 after duplicate removal!
+
+#save as a .bib file, upload to Zotero, export as .ris file, import to Rayyan.
+
+#write_refs(ris_dat1, format = "bib", file = "search/Pest_ETH_dedupl.bib")
+
+
+## Supplementary Databases
+
 #We need two ancillary/supplemental datasets in addition to our main dataset to enrich our analysis and answer our research questions (RQ), including pesticides' Maximum Residue Limit (MRL) and pesticides' Toxicity Relevance Value (TRV; chronic ADI/RfD).
 
 #For MRL dataset, we used the publicly available EU MRL and USDA databases. For TRV dataset, we used EU pesticide properties (EFSA) and US EPA IRIS databases.  In both datasets, we preferred the lowest values whenever multiple values retrieved.

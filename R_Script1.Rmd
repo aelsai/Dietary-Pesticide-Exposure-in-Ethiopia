@@ -22,6 +22,45 @@ knitr::opts_chunk$set(
   cache = TRUE)
 ```
 
+
+# SI Section 1: Introduction and Literature Search
+
+**Introduction**
+
+This Supplementary Information (SI) document outlines the R code and steps for conducting a multilevel meta-analysis and probabilistic risk assessment of dietary pesticide exposure in Ethiopia. There are five main sections dealing with study search and validation, dataset preparation and exploration, missing data handling, multilevel meta-analysis, and pesticide safety assessments (maximum residue level exceedance and chronic health risks).
+
+First, we conducted an exhaustive literature search across global and local databases to identify studies reporting pesticide residues in Ethiopian food commodities. From this, we included 44 studies contributing 2,099 residue data points (i.e., effect sizes) across 87 pesticides and 18 food subgroups. Next, we identified and handled left-censoring and missing data in our compiled dataset using advanced methods such as Kaplan–Meier (KM) estimation and multilevel imputation. We pooled national pesticide residue levels using a three-level MMA model with robust variance estimation (RVE), and uni-moderator meta-regression was conducted to identify predictors of variation. As a preliminary safety assessment, we computed MRL exceedance rates. Finally, we used unique pesticide–food combination estimates, Ethiopian-specific food consumption rates, adult body weight, and derived toxicological reference values as inputs to our Monte Carlo-based probabilistic risk assessment, with Latin Hypercube Sampling, to calculate chronic daily pesticide intake and associated non-cancer and cancer risks.
+
+As mentioned in the main text, our study aimed to answer several research questions based on the following hypotheses:
+
+- _H1:_ The overall pesticide residue concentration in Ethiopian foods is expected to be high, and to vary by pesticide and food type.
+
+- _H2:_ Sample location, analysis method (instrument) and food origin significantly moderate pesticide residue concentrations.
+
+- _H3:_ Low to medium health risks are expected, with legacy pesticides and animal-derived foods contributing most.
+
+**Study Identification and Inclusion**
+
+To ensure a comprehensive and systematic identification of relevant studies, a structured literature search was conducted across multiple databases (Web of Science, Scopus, PubMed, Google Scholar, Semantic Scholar, and OpenAlex) and repositories (OAIster, ProQuest Dissertations & Theses, EthERNA, and six Ethiopian institutional repositories identified via OpenDOAR). Pesticide-related keywords such as agrochemical, insecticide, fungicide, herbicide, and occurrence/exposure-related keywords such as pollution, exposure, monitoring, residue, contamination, food, with geographic focus, Ethiopia were defined and used. Database specific search strategy, tailored its indexing system, controlled vocabulary and search functionalities, along with hits were provided in Table S1.
+
+Our search strategy was validated against a set of 35 benchmark studies, compiled from multiple sources and based on expert knowledge of the literature following the established protocols for search string validation by (Lagisz et al., 2025). Our preliminary Scopus search retrieved all of the benchmark studies, suggesting its sensitivity and comprehensiveness. A list of benchmark studies used for search strategy validation was provided in Table S2. Study identification, screening and inclusion was summarized using Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) flow diagram (Figure 1).
+
+```{r, fig.cap="PRISMA flow diagram for study identification, screening and inclusion", out.width="90%", fig.asp=0.75, dpi=800}
+knitr::include_graphics(here("inputs/PRISMA.png"))
+```
+
+Study Inclusion and Data Extraction
+
+A comprehensive systematic literature search was conducted to identify studies on pesticide residues in food sources within Ethiopia. Supplementary Information (SI) Text 1 briefly describes study search strategy, validation, and PRISMA flow diagram. Overall, we queried multiple bibliographic databases, including Web of Science, Scopus, PubMed, Google Scholar, Semantic Scholar, and OpenAlex. To ensure broad coverage, we also searched gray literature sources such as OAIster, ProQuest Dissertations & Theses, EthERNA, and six local Ethiopian university repositories. Our search strategy included pesticide-related keywords (e.g., "pesticide", "agrochemical", "insecticide") and occurrence/exposure-related keywords (e.g., "pollution", "exposure", "residue") with geographic focus, Ethiopia. These keywords were combined using Boolean operators (e.g., OR, AND, NOT) and searched in Title/Abstract/keyword after being customized for each search database. For some databases lacking advanced search features, including local repositories, a simple search terms like pesticide, residue, or food contamination was used (SI Table S1). We validated the sensitivity and comprehensiveness of our search strategy against a set of 35 benchmark studies compiled from multiple sources based on authors’ knowledge of the existing pesticide residue studies in Ethiopia using Scopus search following the established protocols by (Lagisz et al., 2025). Our search retrieved 100% of the benchmark studies, showcasing the robustness of our strategy (see SI Table S2). We also manually scanned reference lists of identified relevant studies and review articles. The final search was updated on [xx/xx].
+
+Across all the databases and repositories, a total of 1,539 studies were retrieved, and imported and merged into one file in Endnote. Then, 237 duplicates were removed using a string-matching algorithm in R package synthesisr. Again 54 duplicates were removed after importing into Rayyan (https://www.rayyan.ai/) for initial screening stage. Based on Title/Abstract screening, 134 studies were identified and through full text screening, a total of 44 studies were finally included (SI Figure S1). As such, studies were included if addressed pesticide residues in Ethiopian food sources, provided quantitative residue concentration data (e.g., mean, median, standard deviation), and published in English or local languages authors could understand. Studies were excluded if they lacked quantitative data, focused on occupational exposure, or were commentaries, editorials, or reviews without original data.
+
+From the included studies, we extracted study characteristics (first author, title, DOI, publication year), sample characteristics (food source type, analytical instrument, sample size, sample year), and pesticide data (name, summary statistics) (See SI Table S3). All analyzed pesticides, regardless of detection status, were extracted from included studies along with analytical instrument used and respective limits of detection and quantification (LOD/LOQ) (Table S4). Raw pesticide residue concentrations were prioritized (i.e., unique sample/location measurements), and if unavailable, summary statistics (e.g., mean and standard deviation) were extracted. Data from figures were extracted using PlotDigitizer. Study search, screening, and data extraction were primarily performed by one author (EMA) and independently verified by the remaining authors, with disagreements resolved through discussion.
+
+# SI Section 2: Dataset Preparation and Exploration
+
+Pesticide residue concentration data extracted from included was loaded and processed as presented below (the main dataset). Ancillary/Supplemental datasets (i.e., maximum residue level, toxicity reference value and food consumption rate datasets) were loaded and processed as presented in `R_Script2`.
+
 **Section 0: Preliminary Step**
 
 _**Before proceeding with the next sections, let's install, update and/or load required packages**_
@@ -70,77 +109,6 @@ library(truncnorm)
 library(fitdistrplus)
 ```
 
-# SI Section 1: Introduction and Literature Search
-
-**Introduction**
-
-This Supplementary Information (SI) document outlines the R code and steps for conducting a multilevel meta-analysis and probabilistic risk assessment of dietary pesticide exposure in Ethiopia. There are five main sections dealing with study search and validation, dataset preparation and exploration, missing data handling, multilevel meta-analysis, and pesticide safety assessments (maximum residue level exceedance and chronic health risks).
-
-First, we conducted an exhaustive literature search across global and local databases to identify studies reporting pesticide residues in Ethiopian food commodities. From this, we included 44 studies contributing 2,099 residue data points (i.e., effect sizes) across 87 pesticides and 18 food subgroups. Next, we identified and handled left-censoring and missing data in our compiled dataset using advanced methods such as Kaplan–Meier (KM) estimation and multilevel imputation. We pooled national pesticide residue levels using a three-level MMA model with robust variance estimation (RVE), and uni-moderator meta-regression was conducted to identify predictors of variation. As a preliminary safety assessment, we computed MRL exceedance rates. Finally, we used unique pesticide–food combination estimates, Ethiopian-specific food consumption rates, adult body weight, and derived toxicological reference values as inputs to our Monte Carlo-based probabilistic risk assessment, with Latin Hypercube Sampling, to calculate chronic daily pesticide intake and associated non-cancer and cancer risks.
-
-As mentioned in the main text, our study aimed to answer several research questions based on the following hypotheses:
-
-- _H1:_ The overall pesticide residue concentration in Ethiopian foods is expected to be high, and to vary by pesticide and food type.
-
-- _H2:_ Sample location, analysis method (instrument) and food origin significantly moderate pesticide residue concentrations.
-
-- _H3:_ Low to medium health risks are expected, with legacy pesticides and animal-derived foods contributing most.
-
-**Study Identification and Inclusion**
-
-To ensure a comprehensive and systematic identification of relevant studies, a structured literature search was conducted across multiple databases (Web of Science, Scopus, PubMed, Google Scholar, Semantic Scholar, and OpenAlex) and repositories (OAIster, ProQuest Dissertations & Theses, EthERNA, and six Ethiopian institutional repositories identified via OpenDOAR). Pesticide-related keywords such as agrochemical, insecticide, fungicide, herbicide, and occurrence/exposure-related keywords such as pollution, exposure, monitoring, residue, contamination, food, with geographic focus, Ethiopia were defined and used. Database specific search strategy, tailored its indexing system, controlled vocabulary and search functionalities, along with hits were provided in Table S1.
-
-Our search strategy was validated against a set of 35 benchmark studies, compiled from multiple sources and based on expert knowledge of the literature following the established protocols for search string validation by (Lagisz et al., 2025). Our preliminary Scopus search retrieved all of the benchmark studies, suggesting its sensitivity and comprehensiveness. A list of benchmark studies used for search strategy validation was provided in Table S2. Study identification, screening and inclusion was summarized using Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) flow diagram (Figure 1).
-
-
-Study Inclusion and Data Extraction
-
-A comprehensive systematic literature search was conducted to identify studies on pesticide residues in food sources within Ethiopia. Supplementary Information (SI) Text 1 briefly describes study search strategy, validation, and PRISMA flow diagram. Overall, we queried multiple bibliographic databases, including Web of Science, Scopus, PubMed, Google Scholar, Semantic Scholar, and OpenAlex. To ensure broad coverage, we also searched gray literature sources such as OAIster, ProQuest Dissertations & Theses, EthERNA, and six local Ethiopian university repositories. Our search strategy included pesticide-related keywords (e.g., "pesticide", "agrochemical", "insecticide") and occurrence/exposure-related keywords (e.g., "pollution", "exposure", "residue") with geographic focus, Ethiopia. These keywords were combined using Boolean operators (e.g., OR, AND, NOT) and searched in Title/Abstract/keyword after being customized for each search database. For some databases lacking advanced search features, including local repositories, a simple search terms like pesticide, residue, or food contamination was used (SI Table S1). We validated the sensitivity and comprehensiveness of our search strategy against a set of 35 benchmark studies compiled from multiple sources based on authors’ knowledge of the existing pesticide residue studies in Ethiopia using Scopus search following the established protocols by (Lagisz et al., 2025). Our search retrieved 100% of the benchmark studies, showcasing the robustness of our strategy (see SI Table S2). We also manually scanned reference lists of identified relevant studies and review articles. The final search was updated on [xx/xx].
-
-Across all the databases and repositories, a total of 1,539 studies were retrieved, and imported and merged into one file in Endnote. Then, 237 duplicates were removed using a string-matching algorithm in R package synthesisr. Again 54 duplicates were removed after importing into Rayyan (https://www.rayyan.ai/) for initial screening stage. Based on Title/Abstract screening, 134 studies were identified and through full text screening, a total of 44 studies were finally included (SI Figure S1). As such, studies were included if addressed pesticide residues in Ethiopian food sources, provided quantitative residue concentration data (e.g., mean, median, standard deviation), and published in English or local languages authors could understand. Studies were excluded if they lacked quantitative data, focused on occupational exposure, or were commentaries, editorials, or reviews without original data.
-
-From the included studies, we extracted study characteristics (first author, title, DOI, publication year), sample characteristics (food source type, analytical instrument, sample size, sample year), and pesticide data (name, summary statistics) (See SI Table S3). All analyzed pesticides, regardless of detection status, were extracted from included studies along with analytical instrument used and respective limits of detection and quantification (LOD/LOQ) (Table S4). Raw pesticide residue concentrations were prioritized (i.e., unique sample/location measurements), and if unavailable, summary statistics (e.g., mean and standard deviation) were extracted. Data from figures were extracted using PlotDigitizer. Study search, screening, and data extraction were primarily performed by one author (EMA) and independently verified by the remaining authors, with disagreements resolved through discussion.
-
-_**Duplication Removal**_
-
-Two-step process was used for deduplication:
-
-- String-matching algorithm using `synthesisr` package
-
-- Rayyan duplication removal tool (https://www.rayyan.ai/)
-
-```{r }
-##String-matching algorithm using synthesisr
-
-#load and process RIS file
-ris_dat<- read_refs(here("search/Pest_ETH.ris"))
-#1539 articles
-ris_dat$title2 <- str_replace_all(ris_dat$title,"[:punct:]","") %>% 
-  str_replace_all(.,"[ ]+", " ") %>% tolower()
-ris_dat <- distinct(ris_dat, title2, .keep_all = TRUE)
-#dim(ris_dat)
-
-#remove partial matches in titles
-duplicates_string <- find_duplicates(ris_dat$title2, method = "string_osa", to_lower = TRUE, rm_punctuation = TRUE, threshold = 7)
-#manual_checks <- review_duplicates(ris_dat$title, duplicates_string)
-
-#extract unique references and drop title2 & n_duplicates
-ris_dat1 <- extract_unique_references(ris_dat, duplicates_string) %>%
-  dplyr::select(-title2, -n_duplicates)
-#1303 after duplicate removal!
-
-#save as a .bib file, upload to Zotero, export as .ris file, import to Rayyan.
-
-#write_refs(ris_dat1, format = "bib", file = "search/Pest_ETH_dedupl.bib")
-```
-
-```{r, fig.cap="PRISMA flow diagram for study identification, screening and inclusion", out.width="90%", fig.asp=0.75, dpi=800}
-knitr::include_graphics(here("inputs/PRISMA.png"))
-```
-
-# SI Section 2: Dataset Preparation and Exploration
-
-Pesticide residue concentration data extracted from included was loaded and processed as presented below (the main dataset). Ancillary/Supplemental datasets (i.e., maximum residue level, toxicity reference value and food consumption rate datasets) were loaded and processed as presented in `R_Script2`.
 
 ## Pesticide Residue Data Processing
 
