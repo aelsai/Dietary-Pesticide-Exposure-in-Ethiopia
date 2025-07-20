@@ -22,6 +22,17 @@ knitr::opts_chunk$set(
   cache = TRUE)
 ```
 
+# Section 0: Overview
+This Supplementary Information (SI) document provides additional details on our methodology, including a step-by-step implementation in R with annotated code scripts and references to source data archived on GitHub (https://github.com/aelsai/Dietary-Pesticide-Exposure-in-Ethiopia.git).
+
+The SI is structured into two main sections. The first section offers further details and justifications for key methodological components (e.g., background on non-detects and missing data imputation, multilevel meta-analysis, and the rationale behind the methods used). The second section focuses on the R implementation and presents preliminary results not included in the main text. This document is organized into five main parts: SI Method (background and literature search), dataset preparation and exploration, missing data handling (non-detects, standard deviation, sample size), multilevel meta-analysis, and probabilistic risk assessment.
+
+# Section 1: SI Method
+
+## Literature Search
+
+The studies included in this work are part of a more comprehensive literature database compiled to support a national-scale, multi-pathway, multi-pesticide exposure and cumulative risk assessment in Ethiopia (see the unregistered systematic review protocol here: xx).
+
 
 # SI Section 1: Introduction and Literature Search
 
