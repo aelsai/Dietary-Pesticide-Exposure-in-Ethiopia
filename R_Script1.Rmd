@@ -1,18 +1,14 @@
 ---
 title: "Supplementary Information"
 author: "Asefa et al."
-date: "June 2025"
+date: "July 2025"
 output:
   pdf_document:
     toc: true
     toc_depth: 2
     number_sections: true
     latex_engine: xelatex
-  word_document:
-    toc: true
-    toc_depth: '2'
-subtitle: "A Multilevel Meta-Analysis and Population-Wide Probabilistic Health Risks
-  of Dietary Pesticide Exposure in Ethiopia"
+subtitle: "Multilevel Meta-Analysis and Probabilistic Population-Wide Health Risk Assessment of Dietary Pesticide Exposure in Ethiopia"
 ---
 
 ```{r setup, include=FALSE}
@@ -22,59 +18,161 @@ knitr::opts_chunk$set(
   cache = TRUE)
 ```
 
-# Section 0: Overview
-This Supplementary Information (SI) document provides additional details on our methodology, including a step-by-step implementation in R with annotated code scripts and references to source data archived on GitHub (https://github.com/aelsai/Dietary-Pesticide-Exposure-in-Ethiopia.git).
-
-The SI is structured into two main sections. The first section offers further details and justifications for key methodological components (e.g., background on non-detects and missing data imputation, multilevel meta-analysis, and the rationale behind the methods used). The second section focuses on the R implementation and presents preliminary results not included in the main text. This document is organized into five main parts: SI Method (background and literature search), dataset preparation and exploration, missing data handling (non-detects, standard deviation, sample size), multilevel meta-analysis, and probabilistic risk assessment.
-
-# Section 1: SI Method
-
-## Literature Search
-
-The studies included in this work are part of a more comprehensive literature database compiled to support a national-scale, multi-pathway, multi-pesticide exposure and cumulative risk assessment in Ethiopia (see the unregistered systematic review protocol here: xx).
 
 
-# SI Section 1: Introduction and Literature Search
+**Section 0: Introduction**
 
-**Introduction**
+This Supplementary Information (SI) file provides additional details on our methodology, along with step-by-step implementation in R. Source data, including extracted datasets and R code scripts are available at https://github.com/aelsai/Dietary-Pesticide-Exposure-in-Ethiopia.git.
 
-This Supplementary Information (SI) document outlines the R code and steps for conducting a multilevel meta-analysis and probabilistic risk assessment of dietary pesticide exposure in Ethiopia. There are five main sections dealing with study search and validation, dataset preparation and exploration, missing data handling, multilevel meta-analysis, and pesticide safety assessments (maximum residue level exceedance and chronic health risks).
+Overall, this file is structured into two main sections. The first section offers additional details and justifications for key methodological components (e.g., handling of non-detects and missing data imputation, multilevel meta-analysis, and how these methods align with our study objectives). The second section covers R implementation and preliminary results not included in the main text. Accordingly, this file is organized into five main outlines: SI Method (background and literature search), dataset preparation and exploration, missing data handling (non-detects, standard deviation, sample size), multilevel meta-analysis, and probabilistic risk assessment.
 
-First, we conducted an exhaustive literature search across global and local databases to identify studies reporting pesticide residues in Ethiopian food commodities. From this, we included 44 studies contributing 2,099 residue data points (i.e., effect sizes) across 87 pesticides and 18 food subgroups. Next, we identified and handled left-censoring and missing data in our compiled dataset using advanced methods such as Kaplan–Meier (KM) estimation and multilevel imputation. We pooled national pesticide residue levels using a three-level MMA model with robust variance estimation (RVE), and uni-moderator meta-regression was conducted to identify predictors of variation. As a preliminary safety assessment, we computed MRL exceedance rates. Finally, we used unique pesticide–food combination estimates, Ethiopian-specific food consumption rates, adult body weight, and derived toxicological reference values as inputs to our Monte Carlo-based probabilistic risk assessment, with Latin Hypercube Sampling, to calculate chronic daily pesticide intake and associated non-cancer and cancer risks.
+# Section 1: SI Methods
 
-As mentioned in the main text, our study aimed to answer several research questions based on the following hypotheses:
+## Literature Search and Dataset Preparation
 
-- _H1:_ The overall pesticide residue concentration in Ethiopian foods is expected to be high, and to vary by pesticide and food type.
+The studies included in this analysis were part of a more comprehensive literature database compiled to support a national-scale, multi-pathway, multi-pesticide exposure and cumulative risk assessment in Ethiopia (see the Supplementary file for the unregistered systematic review protocol).
 
-- _H2:_ Sample location, analysis method (instrument) and food origin significantly moderate pesticide residue concentrations.
+Briefly, a systematic search was conducted across 13 international and local databases and repositories using validated search terms to identify studies reporting pesticide levels in multiple environmental media (e.g., air, water, soil, food) in Ethiopia. Search terms were categorized into pesticide-related terms (e.g., agrochemical, insecticide, fungicide, herbicide), occurrence- or exposure-related terms (e.g., pollution, exposure, monitoring, residue, contamination, air, soil, water, food), and geographic location (Ethiopia). As recommended by Lagisz et al. (2025; https://doi.org/10.1017/rsm.2024.6), evaluation of these terms using a Scopus search against 25 benchmark articles retrieved a priori revealed 100% sensitivity. The final search retrieved 1,539 records, from which 45 studies specifically addressing pesticide residues in food were included here. The overall process is summarized using the Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) flow diagram, as shown in SI Figure 1.
 
-- _H3:_ Low to medium health risks are expected, with legacy pesticides and animal-derived foods contributing most.
-
-**Study Identification and Inclusion**
-
-To ensure a comprehensive and systematic identification of relevant studies, a structured literature search was conducted across multiple databases (Web of Science, Scopus, PubMed, Google Scholar, Semantic Scholar, and OpenAlex) and repositories (OAIster, ProQuest Dissertations & Theses, EthERNA, and six Ethiopian institutional repositories identified via OpenDOAR). Pesticide-related keywords such as agrochemical, insecticide, fungicide, herbicide, and occurrence/exposure-related keywords such as pollution, exposure, monitoring, residue, contamination, food, with geographic focus, Ethiopia were defined and used. Database specific search strategy, tailored its indexing system, controlled vocabulary and search functionalities, along with hits were provided in Table S1.
-
-Our search strategy was validated against a set of 35 benchmark studies, compiled from multiple sources and based on expert knowledge of the literature following the established protocols for search string validation by (Lagisz et al., 2025). Our preliminary Scopus search retrieved all of the benchmark studies, suggesting its sensitivity and comprehensiveness. A list of benchmark studies used for search strategy validation was provided in Table S2. Study identification, screening and inclusion was summarized using Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) flow diagram (Figure 1).
-
-```{r, fig.cap="PRISMA flow diagram for study identification, screening and inclusion", out.width="90%", fig.asp=0.75, dpi=800}
-knitr::include_graphics(here("inputs/PRISMA.png"))
+```{r, fig.cap="PRISMA flow diagram for study identification, screening and inclusion", out.width="50%", fig.asp=0.75, dpi=800}
+library(here)
+knitr::include_graphics(here("Figure/PRISMA.png"))
 ```
 
-Study Inclusion and Data Extraction
+In addition to the main eligibility criteria presented in our protocol, we assessed whether primary, non-duplicate food residue data were presented. Accordingly, five studies were excluded because sufficient quantitative data were not provided. From the remaining 40 studies, we extracted study characteristics (first author, title, DOI, publication year), sample characteristics (food source type, analytical instrument, sample size, sample year), and pesticide data (name, summary statistics). We also extracted and summarized all screened pesticides, regardless of detection status, along with reported limits of detection and quantification (LOD/LOQ). Whenever available, raw residue concentrations were prioritized (i.e., unique sample/location measurements) over summary statistics (see Source Data).
 
-A comprehensive systematic literature search was conducted to identify studies on pesticide residues in food sources within Ethiopia. Supplementary Information (SI) Text 1 briefly describes study search strategy, validation, and PRISMA flow diagram. Overall, we queried multiple bibliographic databases, including Web of Science, Scopus, PubMed, Google Scholar, Semantic Scholar, and OpenAlex. To ensure broad coverage, we also searched gray literature sources such as OAIster, ProQuest Dissertations & Theses, EthERNA, and six local Ethiopian university repositories. Our search strategy included pesticide-related keywords (e.g., "pesticide", "agrochemical", "insecticide") and occurrence/exposure-related keywords (e.g., "pollution", "exposure", "residue") with geographic focus, Ethiopia. These keywords were combined using Boolean operators (e.g., OR, AND, NOT) and searched in Title/Abstract/keyword after being customized for each search database. For some databases lacking advanced search features, including local repositories, a simple search terms like pesticide, residue, or food contamination was used (SI Table S1). We validated the sensitivity and comprehensiveness of our search strategy against a set of 35 benchmark studies compiled from multiple sources based on authors’ knowledge of the existing pesticide residue studies in Ethiopia using Scopus search following the established protocols by (Lagisz et al., 2025). Our search retrieved 100% of the benchmark studies, showcasing the robustness of our strategy (see SI Table S2). We also manually scanned reference lists of identified relevant studies and review articles. The final search was updated on [xx/xx].
+## Regulatory Risk Assessment in Ethiopia
 
-Across all the databases and repositories, a total of 1,539 studies were retrieved, and imported and merged into one file in Endnote. Then, 237 duplicates were removed using a string-matching algorithm in R package synthesisr. Again 54 duplicates were removed after importing into Rayyan (https://www.rayyan.ai/) for initial screening stage. Based on Title/Abstract screening, 134 studies were identified and through full text screening, a total of 44 studies were finally included (SI Figure S1). As such, studies were included if addressed pesticide residues in Ethiopian food sources, provided quantitative residue concentration data (e.g., mean, median, standard deviation), and published in English or local languages authors could understand. Studies were excluded if they lacked quantitative data, focused on occupational exposure, or were commentaries, editorials, or reviews without original data.
+Ethiopia established a legal framework for pesticide regulation with the enactment of Proclamation No. 674/2010, and subsequently introduced a scientifically based pesticide registration system in 2014 to ensure that pesticide use does not pose unacceptable risks to human health, animal health, or the environment (Deneer et al., 2014). Despite this regulatory advancement, the current risk assessment process primarily emphasizes environmental exposure, particularly surface and groundwater, while largely neglecting food safety. According to the pesticide registration and control regulation (Schedule II, Article 1.1.4), the evaluation of dietary exposure in both humans and animals under local conditions is a mandatory component of the registration process. However, in practice, this aspect of risk assessment remains underdeveloped. Ethiopia currently adopts Codex Alimentarius (CXLs) maximum residue limits (MRLs) by default. Yet, safety assessments are rarely conducted for domestic and exported foods. In theory, a deterministic approach is employed for chronic dietary risk assessment using the WHO-GEMS/Food International Estimated Daily Intake (IEDI) model, which has been adapted by excluding non-relevant commodities. Nonetheless, when Codex MRLs or international risk assessment scenarios do not align with local pesticide use patterns, Ethiopia lacks the legislative framework to define its own national MRLs or establish context-specific risk values.
 
-From the included studies, we extracted study characteristics (first author, title, DOI, publication year), sample characteristics (food source type, analytical instrument, sample size, sample year), and pesticide data (name, summary statistics) (See SI Table S3). All analyzed pesticides, regardless of detection status, were extracted from included studies along with analytical instrument used and respective limits of detection and quantification (LOD/LOQ) (Table S4). Raw pesticide residue concentrations were prioritized (i.e., unique sample/location measurements), and if unavailable, summary statistics (e.g., mean and standard deviation) were extracted. Data from figures were extracted using PlotDigitizer. Study search, screening, and data extraction were primarily performed by one author (EMA) and independently verified by the remaining authors, with disagreements resolved through discussion.
+## Addressing Data Challenges in Dietary Risk Assessment
 
-# SI Section 2: Dataset Preparation and Exploration
+In data-limited Global South contexts like Ethiopia, where pesticide use is widespread but monitoring and regulatory frameworks are weak, synthesizing sparse residue data via meta-analysis is crucial for quantifying health risks. However, conventional methods struggle with hierarchical clustering (e.g., dependencies across studies, regions, or food groups), left-censoring (non-detects below detection limits), missing values, variabilities (e.g., in consumption or residues), and uncertainties (e.g., measurement errors). Our compiled pesticide food residue dataset exemplifies these issues, with 41% of effect sizes being non-detects (NDs), 64% missing standard deviations (SDs), 12.5% missing sample sizes (SS), and 6.5% missing detection limits (DLs). If left unaddressed, these challenges can severely bias estimates, leading to incomplete or incorrect conclusions. To overcome these, our novel MMA-MC-PRA framework incorporates advanced imputation techniques, enabling robust national-scale estimates and probabilistic risk distributions that test hypotheses on residue variations, moderators, and population risks.
+
+### Imputation of Non-Detects in Left-Censored Residue Data
+
+Like most environmental datasets, our dataset is also highly left-censored, with 41% non-detects (NDs). Simple substitution methods, such as replacing NDs with zero, DL, or DL/2, are commonly recommended by regulatory bodies (e.g., US EPA, EFSA) for their simplicity but can introduce substantial bias, particularly when NDs exceed 30% of the dataset, leading to under- or overestimation of summary statistics and risk assessments. To mitigate this, we employed four advanced imputation techniques suitable for environmental and food residue data: zero-inflated lognormal (ZILN), maximum likelihood estimation (MLE) with censored lognormal fitting, regression on order statistics (ROS), and the non-parametric Kaplan–Meier (KM) method. 
+
+Background and justifications for each method are presented below; for details, readers are referred to EFSA (2010; https://doi.org/10.2903/j.efsa.2010.1557), Szarka et al. (2018; https://doi.org/10.1021/acs.jafc.8b00863), Shoari and Dubé (2018; https://doi.org/10.1002/etc.4046), Chen et al. (2015; https://doi.org/10.1007/s13253-015-0196-3), and Sang et al. (2024; https://doi.org/10.1016/j.jenvman.2023.119813).
+
+_**Zero-Inflated Lognormal (ZILN) Imputation**_: The ZILN method models left-censored data as a mixture of true zeros and a lognormal distribution, accounting for zero-inflation common in pesticide residues where NDs may represent either absence or concentrations below the DL. This approach is particularly suitable for datasets with high ND proportions and bimodal patterns, as it reduces bias by separately estimating the probability of true zeros (e.g., via a binomial component) and imputing non-zero NDs from a truncated lognormal distribution.
+
+_**Maximum Likelihood Estimation (MLE)**_: MLE imputes NDs by fitting a lognormal distribution to the censored data and drawing random values from the truncated distribution below the DL. We found that lognormal distributions best fit the residue data, and MLE provides efficient parameter estimates that maximize the likelihood of observed data, including censored points. This parametric method outperforms simple substitutions by incorporating uncertainty in NDs through random sampling from the fitted distribution, making it robust for risk assessment when data fit lognormality assumptions.
+
+_**Regression on Order Statistics (ROS)**_: ROS is a semi-parametric method that imputes NDs by regressing ordered detected values against their normal quantiles (probability plotting positions), assuming an underlying lognormal distribution, and extrapolating to censored points. It handles left-censoring effectively without requiring full parametric assumptions, reducing bias in mean and variance estimates compared to substitution methods, especially in moderately censored datasets.
+
+_**Kaplan-Meier (KM) Method**_: The KM method is a non-parametric survival analysis technique adapted for left-censored data, estimating the empirical cumulative distribution function (ECDF) by treating NDs as left-censored survival times and imputing via inverse transform sampling from the survival curve. As a distribution-free approach, KM avoids parametric assumptions (e.g., lognormality), making it ideal for datasets where the underlying distribution is unknown or non-lognormal, and it provides unbiased estimates of percentiles and means in highly censored data.
+
+These methods were selected based on their robustness for handling left-censored data, as demonstrated in prior studies (see references above). Imputation was performed using the `EnvStats`, `NADA`, and `survival` packages.
+
+### Imputation of Missing Standard Deviations and Sample Sizes
+
+As noted earlier, SDs and sample sizes were missing in approximately 64% and 12% of our residue dataset, respectively, posing challenges for downstream meta-analytic calculations that require complete variance estimates. While deterministic formulas (e.g., Hozo et al., 2005) can estimate SD from available statistics like means and ranges, they are inadequate for high missingness levels, as they ignore uncertainty and inter-variable dependencies, potentially introducing bias. Instead, we employed Multivariate Imputation by Chained Equations (MICE) with predictive mean matching (pmm) to handle this missingness.
+
+MICE is an iterative, multivariate imputation technique that models each incomplete variable conditionally on others via chained regression equations, producing multiple plausible datasets that account for imputation uncertainty. Unlike single imputation or complete-case analysis, MICE reduces bias and variance underestimation in datasets with substantial missingness by incorporating relationships among variables, making it suitable for environmental meta-analyses where data are often incomplete and hierarchically structured. The pmm method non-parametrically matches missing values to observed donor values with similar predicted means from regression models, preserving the original data distribution and handling non-normality effectively. 
+
+For detailed methodological backgrounds, readers are referred to Azur et al. (2011; https://doi.org/10.1002/mpr.329), Ian et al. (2011; https://doi.org/10.1002/sim.4067), and Kambach et al. (2020; https://doi.org/10.1002/ece3.6806).
+
+MICE was implemented using the `mice` package, generating 50 imputed datasets over 20 iterations, with visual diagnostics (density plots) confirming that imputations preserved the underlying data distributions. We assumed data were missing at random (MAR) and that SD and SS were strongly dependent on mean residue values, despite the dataset’s hierarchical structure (e.g., nested by study, pesticide, food group). To select a single representative dataset for analysis, we calculated the total percentage absolute error between imputed and observed means for SD and SS across imputations, choosing the one with the minimal error to minimize bias. This approach ensures the chosen dataset closely aligns with observed central tendencies and serves as a pragmatic alternative to pooling all imputations when a single dataset is needed for complex meta-analysis, while retaining computational efficiency.
+
+## Multilevel Meta-Analysis Modelling
+
+Our residue data exhibit hierarchical dependencies, with multiple effect sizes nested within studies (i.e., more than one effect size from a single study). Such statistical non-independence can arise from clustering in sampling methods, locations, and analytical techniques within the same study. Traditional meta-analyses may inadequately capture this complexity, leading to biased estimates and underestimated heterogeneity. Multilevel meta-analysis (MMA) addresses these issues by modeling variance at multiple levels, providing more accurate pooled estimates and insights into heterogeneity sources for environmental policy and risk assessment. For detailed backgrounds on MMA, readers are referred to Assink and Wibbelink (2016; https://doi.org/10.20982/tqmp.12.3.p154), Nakagawa et al. (2023; https://doi.org/10.1186/s13750-023-00301-6), Van den Noortgate et al. (2013; https://doi.org/10.3758/s13428-012-0261-6), and Harrer et al. (2021; https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/multilevel-ma.html).
+
+We implemented three-level MMA models using the `rma.mv` function from the `metafor` package, incorporating robust variance estimation (RVE) via `clubSandwich` to correct for small-sample bias and study clustering. Models accounted for: _Level 1 (sampling variance), Level 2 (within-study variance among effect sizes), and Level 3 (between-study variance)_. A tiered strategy was applied to test our hypotheses. 
+
+The intercept-only model (Model 1) estimated the overall pooled log-transformed mean residue concentration without moderators, using restricted maximum likelihood (REML) for unbiased variance components. This baseline model quantifies the grand mean while partitioning heterogeneity into within- and between-study components, essential for datasets with nested structures to avoid inflated Type I errors. Subgroup models (Models 2.1 and 2.2) incorporated fixed effects for pesticide use type and food group, respectively, to identify categorical sources of variability, such as differential residue accumulation by pesticide type or food category, which is critical for targeted risk assessments in agricultural contexts. RVE was applied post-fitting to ensure robust standard errors, and multilevel $I^2$ confirmed substantial heterogeneity, validating further moderator exploration. Uni-moderator models (Models 3.1–3.6) were fitted using maximum likelihood (ML) estimation to evaluate individual predictors (instrument, food origin, region, zone, use type, food group) against a null model. ML facilitates nested model comparisons through likelihood ratio tests (LRTs), enabling identification of significant moderators _(p < 0.05)_ that explain heterogeneity in multilevel frameworks. Significant moderators from Model 3 were refitted using REML (Models 4.1–4.4) with RVE for final effect estimates, $I^2$ (variance distribution across levels), and $R^2$ (proportion explained by moderators) reporting.
+
+For granular estimates, we fitted 251 independent two-level random-effects models using `rma.uni` for unique pesticide-food pairs with at least two effect sizes (k ≥ 2), stratified by a combined pesticide–food identifier. This classical random-effects approach avoids overparameterization in sparse subgroups where multilevel random effects (e.g., in `rma.mv`) may be inestimable due to low k, providing precise, pair-specific pooled estimates ($tau^2$ for between-study variance) while accounting for within-pair heterogeneity. REML was used for each model, yielding detailed insights into specific combinations unattainable in a single multilevel model.
+
+## Monte Carlo-Based Probabilistic Risk Assessment
+
+Preparing comprehensive general population exposure data for dietary risk assessments is a highly complex and tedious undertaking, often fraught with challenges related to data availability and quality. The same is true for compiling hazard data, where high uncertainty is tied to contaminants' toxicological information. In this regard, leveraging the outputs of our MMA (Meta-Analysis Modeling) framework, we integrated Monte Carlo-based probabilistic risk assessment (MC-PRA) to arrive at scientifically rigorous and realistic population-wide risk assessments in Ethiopia. Unlike deterministic approaches that use conservative point estimates and may overestimate hazards, MC-PRA accounts for input uncertainties (e.g., residue variability, consumption heterogeneity) via stochastic simulations, providing percentile-based outputs and exceedance probabilities that better inform risk management, especially in data-limited settings like Ethiopia.
+
+For details on probabilistic risk assessment, see Flinders et al. (2025; https://doi.org/10.1093/inteam/vjaf016), Nielsen et al. (2023; https://doi.org/10.1186/s12940-022-00918-z), and EFSA (2012; https://doi.org/10.2903/j.efsa.2012.2839).
+
+Our MC-PRA modelling was based on the well-established WHO/FAO framework (https://www.who.int/publications/i/item/9789241572408) used globally, as well as U.S. EPA (2001; https://semspub.epa.gov/work/HQ/134487.pdf) and EFSA (2012; https://doi.org/10.2903/j.efsa.2012.2839) guidelines. Briefly, we considered chronic non-cancer and cancer risks of dietary pesticide intake among the general adult population in Ethiopia. We used the estimated daily intake (EDI) calculated by combining meta-analytic residue levels (251 pesticides across 18 foods, including drinking water) with Ethiopian-specific food consumption rates, adjusted for adult body weight. The food consumption data was derived from the 2018/19 socioeconomic survey panel dataset (https://doi.org/10.48529/k739-c548), where a total of 20,932 unique survey results from 7,527 households were used to calculate national mean and standard deviation food consumption rates. We also used assumed body weight with a mean of 60 kg and SD of 6 kg, bounded between 30 and 120 kg.
+
+Estimated Daily Intake (EDI):
+
+$$\text{EDI}_{i,j} = \frac{C_{i,j} \times CR_{i,j}}{BW}$$
+
+_where:_
+
+- $C_{i,j}$: Concentration of pesticide $j$ in food item $i$ (mg/kg) 
+- $CR_{i,j}$: Consumption rate of food item $i$ (kg/day)  
+- $BW$: Body weight of the individual (kg)
+
+As part of risk characterization, we used hazard quotient (HQ) for non-cancer risks to compare the EDI with a chronic Toxicological Reference Value (TRVs; 76 pesticides) derived from the acceptable daily intake (ADI) or reference dose (RfD) retrieved from EFSA (https://food.ec.europa.eu/plants/pesticides/eu-pesticides-database_en) or IRIS (https://www.epa.gov/iris) databases, respectively, with the lowest value selected conservatively. Missing TRVs (4 pesticides) were retrieved from Pesticide Properties DataBase (https://sitem.herts.ac.uk/aeru/ppdb/en/index.htm). For cancer risks, we used the lifetime cancer risk (LCR) by multiplying the EDI by the oral slope factor (OSF; 23 pesticides) derived from IRIS database.
+
+Hazard Quotient (HQ):
+
+$$HQ = \frac{\text{EDI}_{i,j}}{TRV}$$
+
+Lifetime Cancer Risk (LCR):
+
+$$LCR_i = \text{EDI}_{i,j} \times OSF$$
+
+_where:_
+
+- $TRV$: Chronic oral toxicity reference value for non-cancer effects (mg/kg/day) 
+- $OSF$: Oral slope factor for cancer potency (mg/kg/day⁻¹) 
+
+A Monte Carlo simulation (n=10,000 iterations) combined with Latin Hypercube Sampling (LHS) was employed to robustly account for the inherent variability and uncertainty in the input parameters using `mc2d` and `lhs` packages. In each simulation iteration, values were sampled from the defined probability distributions for pesticide concentration, food consumption, and body weight to compute EDI, HQ, and LCR based on log-normal parameters derived as below. From the resulting simulated distributions, risk percentiles (5th, 50th, 95th) were extracted and exceedance rates were summarized using cumulative distribution functions (CDFs) plots. Furthermore, exceedance probabilities were calculated to quantify the likelihood that estimated risks surpass unacceptable thresholds. HQ values greater than 1 indicate a potential for non-cancer health effects, while LCR values greater than (10^{-4}) (1 in 10,000) are considered a potential public health concern per U.S. EPA risk benchmarks.
+
+$$
+\mu_{\log} = \log\left(\frac{\mu^2}{\sqrt{\sigma^2 + \mu^2}}\right), \quad
+\sigma_{\log} = \sqrt{\log\left(1 + \frac{\sigma^2}{\mu^2}\right)}
+$$
+
+_where:_
+
+- $\mu_{\log}$: The mean of the natural logarithm of the distribution (log-mean).
+- $\sigma_{\log}$: The standard deviation of the natural logarithm of the distribution (log-standard deviation).
+- $\mu$: The arithmetic mean of the original (untransformed) data.
+- $\sigma$: The arithmetic standard deviation of the original (untransformed) data.
+
+Additionally, we estimated the relative food contribution to total EDI to identify major dietary sources of pesticide exposure as below.
+
+$$P_{i,j} = \frac{\text{EDI}_{i,j}}{\text{EDI}_j}$$
+
+_where:_
+- $P_{i,j}$: Relative contribution of food item $i$ to total EDI of pesticide $j$  
+- $\text{EDI}_{i,j}$: EDI from food item $i$  
+- $\text{EDI}_j$: Total EDI from all food items for pesticide $j$
+
+We also computed hazard index (HI), the sum of individual HQs to assess the potential cumulative non-cancer risk from pesticide mixture exposures.
+
+Hazard Index (HI):
+
+$$HI = \sum_{j=1}^{n} HQ_{i,j}$$
+
+_where:_
+- $n$: Number of pesticides considered  
+- $HQ_{i,j}$: Hazard quotient of pesticide $j$ in food item $i$
+
+**Maximum Residue Limits (MRLs) exceedance analysis**
+
+To evaluate the regulatory compliance of foodborne pesticide residues in Ethiopia, we assessed the extent to which the pooled pesticide-food mean concentrations exceeded established MRLs. The pooled mean concentrations (μg/kg) from our meta-analysis were compared against MRL values (n=208 pesticide-food pairs) from regulatory sources (EFSA, USDA). Derivation these MRLs is provided in `R_Script2`. We summarized the overall proportion of exceedances, as well as the distribution of exceedances across pesticide compounds and food commodities using the equation below. Cumulative distribution functions of the log-transformed MRL ratios were visualized to highlight subgroup-specific differences. A ratio >1 indicates exceedance!
+
+$$
+\text{MRL Exceedance Ratio} = \frac{C_i}{\text{MRL}_i}
+$$
+
+_where:_
+
+- $C_i$ is the pooled residue concentration for pesticide–food combination $i$
+
+- $\text{MRL}_i$ is the corresponding MRL. 
+
+
+# SI Section 2: Dataset Processing and Exploration
 
 Pesticide residue concentration data extracted from included was loaded and processed as presented below (the main dataset). Ancillary/Supplemental datasets (i.e., maximum residue level, toxicity reference value and food consumption rate datasets) were loaded and processed as presented in `R_Script2`.
 
-**Section 0: Preliminary Step**
+**Preliminary Step**
 
-_**Before proceeding with the next sections, let's install, update and/or load required packages**_
+Before proceeding with the next sections, let's install, update and/or load required packages
 
 ```{r, message=FALSE}
 #Uncomment to install/update packages
@@ -120,14 +218,13 @@ library(truncnorm)
 library(fitdistrplus)
 ```
 
-
 ## Pesticide Residue Data Processing
 
 The compiled residue dataset encompass pesticide concentration values in Ethiopian foods, and metadata related to sample (i.e., region, zone, food type) and analytical method (i.e., instrument, limit of detection/quantification).
 
 ```{r dataset}
 #load and clean residue dataset
-pest_raw <- read_excel(here("MS1_data.xlsx"), sheet = "pest_raw") %>%
+pest_raw <- read_excel(here("Data/source_data.xlsx"), sheet = "pest_raw") %>%
   #select relevant variables
   dplyr::select(study_id, region, zone, pest_met, pest_parent, type, class, 
                 food, food_group, food_origin, instrument, LOD, LOQ, n_samp, 
@@ -200,7 +297,7 @@ sp<- ggplot(sankey_data,
 
 #sp
 
-#ggsave("output/Figure1_sankey_diagram.png", plot = sp, width = 6.5, height = 3.5, units = "in", dpi = 800)
+#ggsave("Figure/Figure1_sankey_diagram.png", plot = sp, width = 6.5, height = 3.5, units = "in", dpi = 800)
 ```
 
 _**Analyzed Vs. Detected pesticides**_
@@ -208,7 +305,7 @@ _**Analyzed Vs. Detected pesticides**_
 In total, 225 unique pesticide compounds and metabolites were screened, among which 88 (39%) were detected in at least one sample.
 
 ```{r }
-pest_screened <- read_excel(here("MS1_data.xlsx"), sheet = "all_screen") %>% 
+pest_screened <- read_excel(here("Data/source_data.xlsx"), sheet = "all_screen") %>% 
   group_by(pesticide) %>%
   summarise(n_study = n_distinct(study_id),
             n_detect = sum(detected == "Y"), #detected at least in one sample!
@@ -250,11 +347,9 @@ head(food_studied, 10)
 
 ## Pesticide Residue Data Summary
 
-Our pesticide residue datase encompass 2,271 unique measurements (effect sizes) derived from 18,298 food samples collected across Ethiopia. These measurements were compiled from 40 studies, spanning 8 regions, 15 sampling zones, 6 major food groups, and 3 pesticide use types. Notably, legacy organochlorine pesticides, particularly DDT and its metabolites _(p,p′-DDT, p,p′-DDE, p,p′-DDD)_, as well as hexachlorocyclohexanes _(e.g., alpha-HCH)_ and endosulfans _(e.g., alpha-endosulfan, endosulfan-sulfate)_, were the most frequently detected compounds across studies. In terms of food matrices, high contributions were observed from fish, khat, and honey _(grouped under `others`)_ and vegetables such as _tomato and onion_. Approximately _41.3%_ of the unique pesticide measurements were reported as non-detects (NDs). Yet, explicit information on detection limits (LOD or LOQ) were reported in _93.4%_ of the cases, indicating good reporting practices and this will allow for robust methodologies to handle the significant left-censorship in our residue data.
+See Main text for detailed dataset characteristics reporting. Our residue data encompass 2,271 unique measurements (effect sizes) derived from 18,298 food samples collected across Ethiopia. Legacy organochlorine pesticides, particularly DDT and its metabolites _(p,p′-DDT, p,p′-DDE, p,p′-DDD)_, as well as hexachlorocyclohexanes _(e.g., alpha-HCH)_ and endosulfans _(e.g., alpha-endosulfan, endosulfan-sulfate)_, were the most frequently detected residues. Overall, the complied pesticide residue dataset underscore both the _diversity_ and _complexity_ of pesticide contamination monitoring in Ethiopia’s food supply and provide a robust foundation for the multilevel meta-analyses and safety assessments.
 
-Overall, the complied pesticide residue dataset underscore both the _diversity_ and _complexity_ of pesticide contamination monitoring in Ethiopia’s food supply and provide a robust foundation for the multilevel meta-analyses and safety assessments.
-
-# SI Section 3: Handling of Missing Data
+# SI Section 3: Addressing Residue Data Challenges
 
 ## Overview of Missing Data
 
@@ -285,7 +380,7 @@ aggr(pest_es, col = c("navyblue", "red"),
      ylab = c("Missing Data", "Pattern"))
 ```
 
-## Pesticide Residue Data Processing
+## Residue Data Distribution
 
 Before, proceeding with missing data handling, let's explore and process our residue data characteristics. In this section, we identified and fitted the distribution of our data, and removed potential extreme outliers. We also checked the censoring structure in our data, assessing the possibility of Zero Inflation.
 
@@ -316,7 +411,7 @@ p1|p2|p3
 
 _**Fit distribution to observed data**_
 
-_The lognormal distribution provides the best fit based on AIC and other fit statistics_
+The lognormal distribution provides the best fit based on AIC and other fit statistics.
 
 ```{r, warning = FALSE}
 #observed data
@@ -393,25 +488,11 @@ ggplot(pest_df_lc, aes(x = loglc, fill = detected)) +
 
 As shown above, the resulting bimodal pattern indicates a large cluster of NDs at low values and a skewed distribution of detected residues, suggesting a mixture of true zeros and censored positive concentrations. Therefore, appropriate handling of zero-inflation in our data is needed.
 
-## Impute Non-Detects (Left-Censored Residue Data)
+## Imputation of Non-Detects (Left-Censored Residue Data)
 
-While simple substitution methods (e.g., replacing NDs with 1/2 DL or zero) are sometimes recommended by regulatory bodies (US EPA, EFSA), they can introduce substantial bias in datasets, especially when missing data exceeds 30%. As such, we implemented four advanced imputation techniques for handling non-detects in our dataset, and selected the best performing method for further analysis. A fixed 50% zero-inflation probability was assumed for _ZILN_ based on the observed bimodal distribution.
+For ZILN, a 50% zero-inflation rate was applied, and parameters were estimated using censored maximum likelihood via `elnormCensored`, followed by random draws for imputation. MLE was implemented using `elnormCensored` for fitting, followed by uniform random draws transformed via the inverse cumulative distribution function. For ROS, the `cenros` function from the `NADA` package was used to compute modeled values for NDs. KM imputation involved creating a survival object with `survfit`, approximating the survival function, and generating uniform random draws for NDs below the DL using the survival package.
 
-_**ND imputation methods used**_
-
-- _ZILN_: Zero-inflated lognormal (assumes a mix of true zeros and lognormal values)
-
-- _MLE_: Maximum Likelihood Estimation using censored lognormal fitting
-
-- _ROS_: Regression on Order Statistics under a lognormal assumption
-
-- _KM_: Kaplan–Meier method (non-parametric)
-
-Readers are referred to these references for detailed background on these methods:
-- (EFSA, 2010): 10.2903/j.efsa.2010.1557 
-- (Szarka et al., 2018): 10.1021/acs.jafc.8b00863 
-- (Shoari and Dubé, 2018): 10.1002/etc.4046 
-- (Sang et al., 2024): 10.1016/j.jenvman.2023.119813  
+See _**SI Methods**_ section for detailed background and justifications.
 
 _**Run ND imputation models**_
 
@@ -546,12 +627,11 @@ pest_imp1 <- pest_df %>%
   mutate(Mean = KM) %>%
   dplyr::select(-ZILN, -MLE, -ROS, -KM)
 
-#write.csv(pest_imp1, "inputs/pest_imp1.csv", row.names = FALSE)
 ```
 
-## Impute Missing SD and Sample Size
+## Imputation of Missing SD and Sample Size
 
-As mentioned earlier, standard deviation (SD) and sample size (n_samp) is missing in about 64% and 12% our dataset. While formulas like Hozo et al. (2005) provide ways to estimate SD from available statistics, such high levels of missingness in our data are best addressed through multiple imputation methods to reduce bias and uncertainty. We implemented a simplified Multivariate Imputation by Chained Equations (MICE) algorithm with 50 iterations based on Predictive Mean Matching (pmm) to impute missing SDs and n_samp (van Buuren & Groothuis-Oudshoorn, 2011). Our assumptions were SDs and n_samp are missing at random and strongly dependent on Mean values despite the hierarchical nature of dataset.
+See _**SI Methods**_ section for detailed background and justifications.
 
 _**Run MICE Imputation Model**_
 
@@ -595,8 +675,6 @@ _**Select Best-Imputed Dataset**_
 
 To retain only one representative dataset among the 50 MICE iterations, we calculated the total percentage absolute error between imputed and observed means of SD and n_samp, and selected the dataset with the smallest error (i.e., error minimization approach). 
 
-_It has been shown that imputation number 15 had the smallest total error (1.95%), closely matching the central tendencies of the observed data._
-
 ```{r}
 ##Best imputation based on error minimization
 
@@ -633,9 +711,11 @@ error_df <- error_df %>% arrange(total_error)
 head(error_df, 5)
 ```
 
+It has been shown that imputation number 39 had the smallest total error (~2%), closely matching the central tendencies of the observed data.
+
 _Attention!!!_
 
-The result above is based on the current imputation only. If another imputation were performed, the outcome could be entirely different. However, the fundamental concept remains the same (i.e., identify and select the imputation with the smallest total error).
+The result above is based on the current imputation only. If another imputation were performed, the best dataset could be different. However, the fundamental concept remains the same (i.e., identify and select the imputation with the smallest total error).
 
 _**Process the Final Complete Dataset**_
 
@@ -643,7 +723,7 @@ Having identified the optimal imputed dataset, we now integrate these imputed SD
 
 ```{r }
 #extract the best imputed dataset
-pest_imp_best <- complete(pest_imp, action = 15) 
+pest_imp_best <- complete(pest_imp, action = 39) 
 #this could be differ next time!
 
 #replace missing SD and n_samp in original dataset
@@ -680,21 +760,13 @@ pest_df_comp$vi[pest_df_comp$vi == 0] <- epsilon2
 pest_df_comp <- pest_df_comp %>%
   mutate(es_id = interaction(study_id, es_id, drop = TRUE)) %>%
   drop_na(yi, vi, study_id, es_id, type, food_group, pesticide, food)
-
-#write.csv(pest_df_comp, "inputs/pest_df_comp.csv", row.names = FALSE)
 ```
 
-# SI Section 4: Multilevel Meta-analysis and Meta-Regression
+# SI Section 4: Multilevel Meta-analysis Framework
 
 This section presents a comprehensive meta-analytic framework to quantify pooled pesticide residue concentrations in foods sampled across Ethiopia and to explore heterogeneity using subgroup and moderator analyses. It also describes a specialized meta-analysis approach used to estimate pesticide residue concentrations for very specific combinations of pesticides and food types.
 
-## Model Structure and Objectives
-
-Environmental monitoring data frequently exhibit multiple levels of dependence, which traditional meta-analysis might not adequately address. For instance, typical to pesticide residue data, this dependence could result from food samples collected across various categories, locations, or different time periods that are analyzed using varying methodologies and reported across different studies. Multilevel meta-analysis offers a powerful statistical technique for synthesizing such complex datasets, along with a better understanding of sources of variability, leading to more reliable and informative conclusions for environmental management and policy (Nakagawa, Yang, et al., 2023). 
-
-Detailed background and practical applications of MMA are provided elsewhere (Assink and Wibbelink, 2016; Harrer et al., 2021; Nakagawa, Yang, et al., 2023; Van den Noortgate et al., 2013).
-
-Given the hierarchical nature of our data, where multiple pesticide residue measurements (effect sizes) are nested within individual studies, we implemented _three-level multilevel meta-analysis (MMA) models_ using the `rma.mv()` function from the `metafor` package. For all models, we used _robust variance estimation (RVE)_ via the `clubSandwich` package to account for potential small-sample bias and clustering by study. 
+See _**SI Methods**_ section for detailed background and justifications.
 
 In summary, our three-level MMA model accounts for:
 
@@ -703,17 +775,6 @@ In summary, our three-level MMA model accounts for:
 - _Level 2 (Within-Study Variance):_ Variability among pesticide data points (effect sizes) collected within the same study.
 
 - _Level 3 (Between-Study Variance):_ Variability among the true effects of different studies.
-
-We followed a three-tier modeling strategy:
-
-- _Model 1_: Intercept-only model to estimate the overall pooled mean concentration across all foods and pesticides.
-
-- _Model 2_: Subgroup models by `pesticide use type` and `food group`, to examine variation across key categorical variables.
-
-- _Model 3_: Unimoderator meta-regressions (ML-estimated) for model comparison using `Likelihood Ratio Tests (LRT)`.
-
-- _Model 4_: Final REML-fitted unimoderator models with RVE to report moderator effects and heterogeneity statistics ($I^2$ and $R^2$).
-
 
 ## Overall and Subgroup Meta-analysis
 
@@ -999,7 +1060,7 @@ Table1 <- summary_df %>%
   dplyr::select(Model_Type, Model, Moderator, Subgroup, N, k, Mean, LL_95,
                 UL_95, pval, i2.lvl2, i2.lvl3, i2.tot)
 
-#write.csv(Table1, "output/Table1_Estimates_Summary.csv", row.names = FALSE)
+#write.csv(Table1, "Table/Table1_Estimates_Summary.csv", row.names = FALSE)
 ```
 
 _**Process Model comparison**_
@@ -1016,7 +1077,7 @@ Table2 <- tibble::tibble(
   pval = sapply(model_comp, function(x) round(x$pval, 4)),
   R2 = sapply(r2_values, function(x) if (is.numeric(x)) round(x[1], 3) else NA))
 
-#write.csv(Table2, "output/Table2_Model_Comparison.csv", row.names = FALSE)
+#write.csv(Table2, "Table/Table2_Model_Comparison.csv", row.names = FALSE)
 ```
 
 _**Process Stratified Estimates**_
@@ -1058,7 +1119,7 @@ Table3<- pest_food_df %>%
          k, n_samp, Mean, SD) %>% 
   filter(!is.na(k)) %>% droplevels()
 
-#write.csv(Table3, "output/Table3_pest_food.csv", row.names = FALSE)
+#write.csv(Table3, "Table/Table3_pest_food.csv", row.names = FALSE)
 ```
 
 _**Display Tables**_
@@ -1128,22 +1189,21 @@ op<- (op1/op4/op2|op3) + plot_annotation(tag_levels = "A") &
   theme(plot.title = element_text(size = 12, face = "bold", hjust = 0),
         plot.tag = element_text(size = 10, face = "bold"))
 
-#ggsave("output/Residue_Summary.png", plot = op, width = 7, height = 8, units = "in", dpi = 800)
+#ggsave("Figure/Residue_Summary.png", plot = op, width = 7, height = 8, units = "in", dpi = 800)
 op
 ```
 
-# SI Section 5: Pesticide Safety and Chronic Health Risk Assessments
+# SI Section 5: Monte Carlo Probablistic Risk Assessment Framework
 
-This section focuses on evaluating the safety of pesticide residue concentration in Ethiopian foods. We perform two main types of assessments: Maximum Residue Limit (MRL) Exceedance Analysis and Chronic Non-Cancer and Cancer Risk Assessments.
+This section focuses on implementation of MC-PRA to estimate population-wide dietary pesticide exposure and associated chronic health risks (non-cancer/cancer). But first, the Maximum Residue Limit (MRL) exceedance analysis was conducted to assess the overall non-compliance rate of pesticide residues in Ethiopian foods.
 
 ## Data Sources and Preparation
 
-Input data for safety assessments were processed and prepared as provided in `R_Script2`. Residue data was from the pooled pesticide–food concentration conducted using stratified meta-analysis (SI Section 4). Ethiopian-specific food consumption rates were retrieved from the publicly available fourth round (2018/2019) socioeconomic survey panel dataset (https://doi.org/10.48529/k739-c548). This dataset, nationally representative, provided consumption data from 7,527 households. A total of 20,932 unique survey results matching 17 food types in our dataset (excluding drinking water) were used to calculate national mean and standard deviation food consumption rates. Toxicity Reference Values (TRV, defined as chronic ADI or RfD for ingestion in mg/kg/day) were obtained from the EU pesticide database (https://food.ec.europa.eu/plants/pesticides/eu-pesticides-database_en) and US EPA IRIS database (https://www.epa.gov/iris), with the lowest value selected conservatively. Oral Slope Factors (OSF, in (mg/kg/day)−1), for carcinogenic pesticides, were primarily retrieved from the IRIS database.
-
+Input data for safety assessments were processed and prepared as provided in `R_Script2`.
 
 ```{r }
 #load MRL dataset
-pest_mrl <- read.csv(here("inputs/pest_mrl_df.csv")) #see R_Script2
+pest_mrl <- read.csv(here("Data/inputs/pest_mrl_df.csv")) #see R_Script2
 
 #add MRL to pooled residue concentration
 pest_mrl_df<- Table3 %>%
@@ -1154,8 +1214,8 @@ pest_mrl_df<- Table3 %>%
   filter(!is.na(MRL))
 
 #Toxicity Reference Values and Food consumption rate
-tox_dat<- read.csv(here("inputs/pest_trv_df.csv"))  
-fc_dat<- read.csv(here("inputs/food_consumption.csv"))
+tox_dat<- read.csv(here("Data/inputs/pest_trv_df.csv"))  
+fc_dat<- read.csv(here("Data/inputs/fc_processed.csv"))
 
 #prepare Residue Dataset (convert µg/kg to mg/kg)
 res_dat <- Table3 %>%
@@ -1171,19 +1231,7 @@ res_dat <- Table3 %>%
 
 ## Maximum Residue Limit (MRL) Exceedance Analysis
 
-To evaluate the regulatory compliance of foodborne pesticide residues in Ethiopia, we assessed the extent to which the pooled pesticide-food mean concentrations exceeded established Maximum Residue Limits (MRLs). MRLs are legally defined thresholds for the allowable concentration of a pesticide in food, typically set to ensure consumer safety. The pooled mean concentrations (μg/kg) from our meta-analysis were compared against MRL values compiled for 208 of 351 pesticide-food combinations from regulatory sources (EFSA, USDA). We summarized the overall proportion of exceedances, as well as the distribution of exceedances across pesticide compounds and food commodities. Cumulative distribution functions of the log-transformed MRL ratios were visualized to highlight subgroup-specific differences. A ratio >1 indicates exceedance!
-
-We computed the MRL exceedance ratio as:
-
-$$
-\text{MRL Exceedance Ratio} = \frac{C_i}{\text{MRL}_i}
-$$
-
-_where:_
-
-- $C_i$ is the pooled residue concentration for pesticide–food combination $i$
-
-- $\text{MRL}_i$ is the corresponding MRL. 
+Approximately _26.5%, 55 out of 208 of pesticide-food combinations exceeded allowed MRL._ 28 out of 51 pesticides with MRL were found to be safe (below allowed MRL) and 2 pesticides (i.e., dimetachlor and heptachlor epoxide) had a 100% exceedance rate. On the other hand, all of the food groups exceeded MRL, ranging from 11% to 57%, except for foods in meat group (i.e., animal and fish meat). 
 
 ```{r }
 #compute MRL Exceedance ratio 
@@ -1214,7 +1262,7 @@ food_mrl_stat<- pest_mrl_exced %>% group_by(food_group) %>%
 #food_mrl_stat %>% filter(`%` == 100) %>% tally(name = "N pesticides") #0
 ```
 
-Approximately _26.5%, 55 out of 208 of pesticide-food combinations exceeded allowed MRL._ 28 out of 51 pesticides with MRL were found to be safe (below allowed MRL) and 2 pesticides (i.e., dimetachlor and heptachlor epoxide) had a 100% exceedance rate. On the other hand, all of the food groups exceeded MRL, ranging from 11% to 57%, except for foods in meat group (i.e., animal and fish meat). The overall MRL excedance ratio is summarized the following Figure (see Main text, Figure 2). The Figure illustrates the overall and subgroup-specific cumulative distribution of the logarithm of the MRL exceedance ratio, with a dashed red line indicating the MRL exceedance threshold (see the main text).
+The overall MRL excedance ratio is summarized the following Figure (see Main text, Figure 2). The Figure illustrates the overall and subgroup-specific cumulative distribution of the logarithm of the MRL exceedance ratio, with a dashed red line indicating the MRL exceedance threshold (see the main text).
 
 ```{r, message=FALSE, fig.cap="Cumulative distribution function of logarithm of MRL exceedance ratio", fig.width=6.5, fig.height=6, dpi=800}
 ##Figure 2
@@ -1270,71 +1318,18 @@ mrl_p <- (mrl1/mrl3|mrl2) + plot_annotation(tag_levels = "A") &
 
 #mrl_p #see Main text, Figure 2!
 
-#ggsave("output/MRL_exceedance.png", plot = mrl_p, width = 6.5, height = 6, units = "in", dpi = 800)
+#ggsave("Figure/MRL_exceedance.png", plot = mrl_p, width = 6.5, height = 6, units = "in", dpi = 800)
 ```
 
 ## Non-Cancer and Cancer Risk Assessment
 
-To comprehensively assess the potential chronic dietary health risks associated with pesticide exposure, we conducted probabilistic non-cancer and cancer risk assessments for Ethiopian adults. These assessments were founded on estimating daily dietary pesticide exposure, derived from the pooled unique pesticide-food concentrations (determined through meta-analysis) and Ethiopian daily food consumption rates. Toxicity Reference Values (TRVs) for non-cancer effects and Oral Slope Factors (OSFs) for cancer effects were utilized as critical toxicological benchmarks. For exposure assessment, a `worst-case scenario` was assumed, where food processing methods (e.g., washing, cooking) were presumed to have no effect on pesticide residue levels.
-
-A `Monte Carlo simulation` _(n=10,000 iterations)_ combined with `Latin hypercube sampling (LHS)` was employed to robustly account for the inherent variability and uncertainty in the input parameters. In each simulation iteration, values were sampled from the defined probability distributions for pesticide concentration, food consumption, and body weight to compute Estimated Daily Intake (EDI), Hazard Quotient (HQ), and Lifetime Cancer Risk (LCR). From the resulting simulated distributions, the 5th, 50th (median), and 95th percentiles of HQ and LCR were extracted. Furthermore, exceedance probabilities were calculated to quantify the likelihood that estimated risks surpass the unacceptable thresholds. `HQ` values greater than 1 indicate a potential for non-cancer health effects, while `LCR` values greater than $10^{-4}$ (1 in 10,000) are considered a potential public health concern per U.S. EPA risk benchmarks.
-
-The following equations were used to calculate exposure and risks:
-
-Estimated Daily Intake (EDI):
-
-$$
-\text{EDI}_{i,j} = \frac{C_{i,j} \times CR_{i,j}}{BW}
-$$
-
-Hazard Quotient (HQ):
-
-$$
-HQ = \frac{\text{EDI}_{i,j}}{TRV}
-$$
-
-Lifetime Cancer Risk (LCR):
-
-$$
-LCR_i = \text{EDI}_{i,j} \times OSF
-$$
-
-_where:_
-
-- $C_{i,j}$: Concentration of pesticide $j$ in food item $i$ (mg/kg) 
-
-- $CR_{i,j}$: Consumption rate of food item $i$ (kg/day)  
-
-- $BW$: Body weight of the individual (kg)  
-
-- $TRV$: Chronic oral toxicity reference value for non-cancer effects (mg/kg/day) 
-
-- $OSF$: Oral slope factor for cancer potency (mg/kg/day⁻¹) 
+_**Run Probabilistic Risk Estimations**_
 
 Input distribution for probabilistic estimations were defined as follows:
 
 - $C_i$ and $CR_i$ were modeled using log-normal distributions, characterized by arithmetic means and standard deviations derived from meta-analytic estimates and food consumption survey data.
 
 - $BW$ was modeled using a truncated normal distribution ($\mu = 60$, $\sigma = 6$, truncated to \[30, 120] kg).
-
-Log-normal parameters were derived as:
-
-$$
-\mu_{\log} = \log\left(\frac{\mu^2}{\sqrt{\sigma^2 + \mu^2}}\right), \quad
-\sigma_{\log} = \sqrt{\log\left(1 + \frac{\sigma^2}{\mu^2}\right)}
-$$
-
-_where:_
-
-- $\mu_{\log}$: The mean of the natural logarithm of the distribution (log-mean).
-
-- $\sigma_{\log}$: The standard deviation of the natural logarithm of the distribution (log-standard deviation).
-
-- $\mu$: The arithmetic mean of the original (untransformed) data.
-
-- $\sigma$: The arithmetic standard deviation of the original (untransformed) data.
-
-_**Run Probabilistic Risk Estimations**_
 
 ```{r }
 #set constants
@@ -1418,7 +1413,7 @@ risk_Table <- res_risk_prob %>%
     LCR_exceed = mean(LCR_sim > 1e-4, na.rm = TRUE) * 100,
     .groups = "drop")
 
-#write.csv(risk_Table, "output/Table_risk_summary1.csv", row.names = FALSE)
+#write.csv(risk_Table, "Table/Table_risk_summary1.csv", row.names = FALSE)
 ```
 
 The cumulative distribution functions for HQ and LCR, along with the percentage of HQ and LCR exceedance rates aggregated by pesticide and food categories were summarized in the following Figure (see Main text, Figure 3).
@@ -1475,7 +1470,7 @@ rplt<-(prp/prf) + plot_annotation(tag_levels = "A") &
 
 #rplt #see Main Text, Figure 3!
 
-#ggsave("output/Risk_summary.png", plot = rplt, width = 10, height = 11, units = "in", dpi = 800)
+#ggsave("Figure/Risk_summary.png", plot = rplt, width = 10, height = 11, units = "in", dpi = 800)
 ```
 
 _**Cumulative risks**_

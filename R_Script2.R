@@ -1,9 +1,22 @@
 
+################ R_Script2 ###################
+
+#Load libraries
+library(here)
+library(readxl)
+library(httr)
+library(xml2)
+library(readr)
+library(dplyr)
+library(tidyverse)
+library(purrr)
+library(stringr)
+library(fuzzyjoin)
+library(tibble)
 
 ##Duplication Removal
-#Two-step process was used for deduplication:
-#String-matching algorithm using `synthesisr` package
-#Rayyan duplication removal tool (https://www.rayyan.ai/)
+
+#Two-step process was used for deduplication: String-matching algorithm using `synthesisr` package; Rayyan duplication removal tool (https://www.rayyan.ai/)
 
 #String-matching algorithm using synthesisr
 #load and process RIS file
@@ -24,7 +37,6 @@ ris_dat1 <- extract_unique_references(ris_dat, duplicates_string) %>%
 #1303 after duplicate removal!
 
 #save as a .bib file, upload to Zotero, export as .ris file, import to Rayyan.
-
 #write_refs(ris_dat1, format = "bib", file = "search/Pest_ETH_dedupl.bib")
 
 
@@ -34,42 +46,26 @@ ris_dat1 <- extract_unique_references(ris_dat, duplicates_string) %>%
 
 #For MRL dataset, we used the publicly available EU MRL and USDA databases. For TRV dataset, we used EU pesticide properties (EFSA) and US EPA IRIS databases.  In both datasets, we preferred the lowest values whenever multiple values retrieved.
 
-## Processing ancillary (MRL and TRV) datasets
-
-#Load libraries
-library(here)
-library(readxl)
-library(httr)
-library(xml2)
-library(readr)
-library(dplyr)
-library(tidyverse)
-library(purrr)
-library(stringr)
-library(fuzzyjoin)
-library(tibble)
-
-
-## Load the main dataset and select distinct pesticides
-raw <- read_excel(here("MS1_data.xlsx"), sheet = "raw") %>%
-  mutate(pest = str_to_lower(str_squish(pest)), 
+#Load the main dataset and select distinct pesticides
+raw <- read_excel(here("Data/source_data.xlsx"), sheet = "pest_raw") %>%
+  mutate(pest_met = str_to_lower(str_squish(pest_met)), 
          food = str_to_lower(str_squish(food)))
 
-pest_mrl<- raw %>% distinct(pest, food) %>% #pesticide metabolites
-  mutate(pest = str_to_lower(str_squish(pest)), 
+pest_mrl<- raw %>% distinct(pest_met, food) %>% #pesticide metabolites
+  mutate(pest_met = str_to_lower(str_squish(pest_met)), 
          food = str_to_lower(str_squish(food))) %>%
-  rename(pesticide = pest)
+  rename(pesticide = pest_met)
 
-pest_trv<- raw %>% distinct(pest) %>% #pesticide metabolites
-  mutate(pest = str_to_lower(str_squish(pest))) %>%
-  rename(pesticide = pest)
+pest_trv<- raw %>% distinct(pest_met) %>% #pesticide metabolites
+  mutate(pest_met = str_to_lower(str_squish(pest_met))) %>%
+  rename(pesticide = pest_met)
 
 ## MRL dataset processing
 
 #EU MRL database: We downloaded the recent complete EU MRL database in XML format from EU Pesticides Database (v3.3; https://ec.europa.eu/food/plant/pesticides/eu-pesticides-database/start/screen/mrls/download) and saved a folder "./pesticide_xmls" We then parsed each files using xml2 R package and extracted pesticide names, food product categories, and the corresponding MRL values.
 
 #Convert xml files to csv
-folder <- "./pesticide_xmls"
+folder <- "Data/pesticide_xmls"
 files  <- file.path(folder, paste0("Publication", 1:8, ".xml"))
 
 #Function to parse one publication
@@ -96,10 +92,8 @@ parse_pub <- function(file) {
   bind_rows(df_list)}
 
 #Parse all and combine
-mrl_eu <- bind_rows(lapply(files, parse_pub)) #~ 251990 obs.
-
-#write.csv(mrl_eu, "inputs/mrl_eu.csv", row.names = FALSE)
-mrl_eu <- read.csv(here("inputs/mrl_eu.csv"))
+mrl_eu <- bind_rows(lapply(files, parse_pub)) #~251990 obs.
+#write.csv(mrl_eu, "Data/inputs/mrl_eu.csv", row.names = FALSE)
 
 #Process csv file
 mrl_eu <- mrl_eu %>%
@@ -112,7 +106,7 @@ mrl_eu <- mrl_eu %>%
   filter(!is.na(mrl))
 
 #USDA MRL database:
-mrl_usda <- read_excel(here("inputs/mrls_dat.xlsx"), sheet = "Pesticide-Raw") %>%
+mrl_usda <- read_excel(here("Data/inputs/mrl_usda.xlsx"), sheet = "Pesticide-Raw") %>%
   rename(pesticide = `Index Pesticide`, 
          food = `Index Commodity`, mrl = `MRL (ppm)`) %>%
   mutate(pesticide = str_to_lower(str_squish(pesticide)),
@@ -151,18 +145,15 @@ mrl.pest.usda %>% mutate(matched = !is.na(pesticide.mrl1)) %>%
             pct_matched    = matched / total_pests * 100)
 #only 41/88 pesticides were matched.
 
-#write.csv(mrl.pest.eu, "mrl.pest.eu.csv", row.names = FALSE)
-#write.csv(mrl_usda, "mrl.usda.csv", row.names = FALSE)
-
 #Note: The majority of the pesticides name across both dataset doesn't match. Thus, it better to proceed with manual matching.
 
 #manually matched names and add to our main dataset
-pest_manual <- read.csv(here("inputs/mrl_pest_name.csv"), na.strings = "") %>%
-  mutate(pesticide.mrl = str_to_lower(pesticide.mrl),
-         pesticide.mrl1 = str_to_lower(pesticide.mrl1))
+#pest_manual <- read.csv(here("Data/mrl_pest_name.csv"), na.strings = "") %>%
+#  mutate(pesticide.mrl = str_to_lower(pesticide.mrl),
+#         pesticide.mrl1 = str_to_lower(pesticide.mrl1))
 
-pest_mrl <- pest_mrl %>%
-  left_join(pest_manual, by = c("pesticide" = "pesticide.raw"))
+#pest_mrl <- pest_mrl %>%
+#  left_join(pest_manual, by = c("pesticide" = "pesticide.raw"))
 
 #Fuzzy Match Food Subgroups ~ EU MRL
 mrl.food.eu <- pest_mrl %>% distinct(food) %>%
@@ -257,32 +248,29 @@ pest_mrl_check <- pest_mrl1 %>% distinct(pesticide, food, MRL) %>%
 pest_mrl_df <- pest_mrl1 %>% 
   select(pesticide, food, MRL)
 
-write.csv(pest_mrl_df, "inputs/pest_mrl_df.csv", row.names = FALSE)
+write.csv(pest_mrl_df, "Data/inputs/pest_mrl_df.csv", row.names = FALSE)
 
 
 ## TRV dataset processing
 
-#Health damage, incidence rate, and toxic effect of chemicals were derived from lognormal dose–response curves (Huijbregts et al., 2005) while other studies (Pennington et al., 2002; Crettaz et al., 2002) applied linear dose-response curves when below the effect dose affecting 10% of the individuals (ED10). Cancer and noncancer incidences for selected pesticides are weighted according to their respective severity and expressed by a loss of (healthy) life time expressed in DALYs (Fantke and Jolliet, 2016; Huijbregts et al., 2005; Li, 2018).
-
-
 #EU active pesticides database: We downloaded the recent complete EU MRL database in XML format from EU Pesticides Database (v3.3; https://ec.europa.eu/food/plant/pesticides/eu-pesticides-database/start/screen/mrls/download) and saved a folder "./pesticide_xmls" We then parsed each files using xml2 R package and extracted pesticide names, food product categories, and the corresponding MRL values.
 
 #select the chronic TRV ~ ADI (mg/kg bw/d)
-trv_eu <- read_excel(here("inputs/ActiveSubstanceExport_13-04-2025.xlsx")) %>%
+trv_eu <- read_excel(here("Data/inputs/trv_efsa.xlsx")) %>%
   rename(pesticide = Substance, ADI = `ADI (mg/kg bw/d)`) %>%
   mutate(pesticide = str_to_lower(str_squish(pesticide)),
          ADI = as.numeric(str_remove(ADI, "\\mg/kg bw/day"))) %>%
-  select(pesticide, ADI) 
+  dplyr::select(pesticide, ADI) 
 
 #US EPA IRIS database:
 #We download the complete IRIS database (last update:15/04/2025; https://www.epa.gov/system/files/documents/2025-04/iris_downloads_database_export_april2025.xlsx) and processed it as follow.
 
 #Load and clean the data: TRV ~ RfD (mg/kg-day)
-trv_iris_rfd <- read_excel(here("inputs/iris_downloads_database_export_april2025.xlsx"), sheet = "RfD Toxicity Values") %>%
+trv_iris_rfd <- read_excel(here("Data/inputs/trv_iris.xlsx"), sheet = "RfD Toxicity Values") %>%
   rename(pesticide = `CHEMICAL NAME`,
          RfD = `RFD VALUE`,
          quality = `OVERALL CONFIDENCE`) %>%
-  select(pesticide, RfD, quality) %>%
+  dplyr::select(pesticide, RfD, quality) %>%
   mutate(pesticide = str_to_lower(str_squish(pesticide)),
          RfD = as.numeric(RfD),
          quality = case_when(quality == "Low/Medium" ~ "Medium-Low",
@@ -380,10 +368,9 @@ pest_trv1 <- pest_trv %>%
       TRUE ~ source1)
   )
 
-write.csv(pest_trv1, "inputs/pest_trv_df.csv", row.names = FALSE)
+#write.csv(pest_trv1, "Data/inputs/pest_trv_df.csv", row.names = FALSE)
 
 ##NOTE: In cases where multiple TRV found for the same pesticide/metabolite, we selected the lowest TRV ("most protective" approach). Similarly, if single TRV is found for only parent pesticides/metabolites, it was used for all metabolites related to that pesticide. If multiple TRV is found for different metabolites and missing for related other metabolite, TRV of more related metabolite was used (vv. parent pesticides).
-
 
 ## Food consumption
 
@@ -395,10 +382,10 @@ write.csv(pest_trv1, "inputs/pest_trv_df.csv", row.names = FALSE)
 #dataset cleaning and processing
 #Our interest is the amount of food consumed daily (kg/day). Select food group, amount & unit; where foods should match our main dataset, consumption rates are presented and standard measurement units are employed.
 
-fc_raw <- read.csv(here("inputs/sect6a_hh_w4.csv"),na.strings = "") %>%
+fc_raw <- read.csv(here("Data/inputs/fc_raw.csv"),na.strings = "") %>%
   rename(food = item_cd, area = saq14, region = saq01, 
          amount = s6aq02a, unit = s6aq02b) %>%
-  select(food, area, region, amount, unit) %>%
+  dplyr::select(food, area, region, amount, unit) %>%
   mutate(food = str_replace(food, "^\\d+\\.\\s*", ""),
          area = str_replace(area, "^\\d+\\.\\s*", ""),
          region = str_replace(region, "^\\d+\\.\\s*", ""),
@@ -467,7 +454,7 @@ fc_raw_f <- fc_raw_f %>%
       food == "swiss chard" ~ 1.94,     
       TRUE ~ CRi))
 
-write.csv(fc_raw_f, "inputs/food_consumption.csv", row.names = FALSE)
+#write.csv(fc_raw_f, "Data/inputs/fc_processed.csv", row.names = FALSE)
 
 
 #Identify best fit for Ci (n=2271) & CRi (n=20932) distribution
@@ -507,47 +494,4 @@ print(gof_residue)
 print(gof_consumption)
 #NOTE: Lognormal distribution was found as best best-fit for both variables (~Best AIC/BIC and GOF overall)! Now, we use lognormal distribution for simulations of point estimates of pooled pesticide residue concentration (Mean [95% CI]) and Consumption Rates (mean, min, max/99 percentile) to calculate risks according for each pesticide-food combination.
 
-
-
-
 ##____________________//END//________________________##
-
-mrl_pest_name <- tibble::tibble(
-  pesticide.raw = c("2,4-d","acetamiprid","aldicarb","aldrin","alpha-endosulfan","alpha-hch","benalaxyl","bendiocarb","beta-cyfluthrin","beta-endosulfan","beta-hch","bromophos-ethyl","butachlor","carbaryl","carbofuran","chlordane","chlorflurenol-methyl","chlorothalonil","chlorpyrifos","chlorpyrifos-methyl", "cis-chlordane","cis-heptachlor epoxide","cyhalothrin","cymiazole","cypermethrin","dde","ddt","diethyltoluamide","delta-hch","deltamethrin","diazinon","dibutyl-chlorendate","dichlobenil","dichlorvos","dieldrin","difenocozole","dimethachlor","dimethoate","disulfoton","endosulfan","endosulfan-sulfate","endrin","endrin-aldehyde","endrin-ketone","ethion","famphur","fenitrothion","fenobucarb","fenthion","flazasulfuron","gamma-hch","heptachlor","heptachlor epoxide","hexachlorobenzene","hexacozole","imidacloprid","indoxacarb","lambda-cyhalothrin","lindane","malathion","metalaxyl","methoxychlor","metribuzin","o,p'-ddd","o,p'-dde","o,p'-ddt","oxamyl","oxy-chlordane","p,p'-ddd","p,p'-dde","p,p'-ddt","parathion","parathion-methyl","piperonyl-butoxide","pirimiphos-methyl","profenofos","propamocarb","propargite","propoxur","pyrimethanil","rotenone","tebucozole","thiamethoxam","thionazin","trans-chlordane","trans-heptachlor-epoxide","trans-nonachlor","zeta-cypermethrin"),
-  
-  pesticide.mrl = c(
-    "2,4-D (sum of 2,4-D, its salts, its esters and its conjugates, expressed as 2,4-D)","acetamiprid (r)","Aldicarb (sum of aldicarb, its sulfoxide and its sulfone, expressed as aldicarb)","Aldrin and Dieldrin (Aldrin and dieldrin combined expressed as dieldrin) (F)","Endosulfan (sum of alpha- and beta-isomers and endosulfan-sulphate expressed as endosulfan) (F)", "Hexachlorocyclohexane (HCH), alpha-isomer  (F)","Benalaxyl including other mixtures of constituent isomers including benalaxyl-M (sum of isomers)",NA,"Cyfluthrin (cyfluthrin including other mixtures of constituent isomers (sum of isomers)) (F)","Endosulfan (sum of alpha- and beta-isomers and endosulfan-sulphate expressed as endosulfan) (F)","Hexachlorocyclohexane (HCH), beta-isomer  (F)","bromophos-ethyl (f)",NA,"carbaryl (f)","Carbofuran (sum of carbofuran (including any carbofuran generated from carbosulfan, benfuracarb or furathiocarb) and 3-OH carbofuran expressed as carbofuran) (R)","Chlordane (sum of cis- and trans-chlordane) (R)(F)",NA,"chlorothalonil (r)","chlorpyrifos (f)","chlorpyrifos-methyl (r)(f)","Chlordane (sum of cis- and trans-chlordane) (R)(F)","Heptachlor (sum of heptachlor and heptachlor epoxide expressed as heptachlor) (F)","Lambda-cyhalothrin (includes gamma-cyhalothrin) (sum of R,S and S,R isomers) (F)",NA, "Cypermethrin (cypermethrin including other mixtures of constituent isomers (sum of isomers)) (F)","DDT (sum of p,p´-DDT, o,p´-DDT, p-p´-DDE and p,p´-TDE (DDD) expressed as DDT) (F)","DDT (sum of p,p´-DDT, o,p´-DDT, p-p´-DDE and p,p´-TDE (DDD) expressed as DDT) (F)",NA,NA,"Deltamethrin (cis-deltamethrin) (F)","diazinon (f)",NA,"dichlobenil","dichlorvos","Aldrin and Dieldrin (Aldrin and dieldrin combined expressed as dieldrin) (F)","difenocozole","dimethachlor","dimethoate","Disulfoton (sum of disulfoton, disulfoton sulfoxide and disulfoton sulfone expressed as disulfoton) (F)","Endosulfan (sum of alpha- and beta-isomers and endosulfan-sulphate expressed as endosulfan) (F)","Endosulfan (sum of alpha- and beta-isomers and endosulfan-sulphate expressed as endosulfan) (F)","endrin (f)","endrin (f)","endrin (f)","ethion",NA,"fenitrothion",NA,"Fenthion (fenthion and its oxigen analogue, their sulfoxides and sulfone expressed as parent) (F)","flazasulfuron","Lindane (Gamma-isomer of hexachlorocyclohexane (HCH)) (F)","Heptachlor (sum of heptachlor and heptachlor epoxide expressed as heptachlor) (F)","Heptachlor (sum of heptachlor and heptachlor epoxide expressed as heptachlor) (F)","hexachlorobenzene (f)","hexacozole","imidacloprid","Indoxacarb (sum of indoxacarb and its R enantiomer) (F)","Lambda-cyhalothrin (includes gamma-cyhalothrin) (sum of R,S and S,R isomers) (F)","Lindane (Gamma-isomer of hexachlorocyclohexane (HCH)) (F)","Malathion (sum of malathion and malaoxon expressed as malathion)","Metalaxyl and metalaxyl-M (metalaxyl including other mixtures of constituent isomers including metalaxyl-M (sum of isomers)) (R)","methoxychlor (f)","metribuzin","DDT (sum of p,p´-DDT, o,p´-DDT, p-p´-DDE and p,p´-TDE (DDD) expressed as DDT) (F)","DDT (sum of p,p´-DDT, o,p´-DDT, p-p´-DDE and p,p´-TDE (DDD) expressed as DDT) (F)","DDT (sum of p,p´-DDT, o,p´-DDT, p-p´-DDE and p,p´-TDE (DDD) expressed as DDT) (F)","oxamyl","Chlordane (sum of cis- and trans-chlordane) (R)(F)","DDT (sum of p,p´-DDT, o,p´-DDT, p-p´-DDE and p,p´-TDE (DDD) expressed as DDT) (F)","DDT (sum of p,p´-DDT, o,p´-DDT, p-p´-DDE and p,p´-TDE (DDD) expressed as DDT) (F)","DDT (sum of p,p´-DDT, o,p´-DDT, p-p´-DDE and p,p´-TDE (DDD) expressed as DDT) (F)","Parathion  (F)","Parathion-methyl (sum of Parathion-methyl and paraoxon-methyl expressed as Parathion-methyl)",NA,"pirimiphos-methyl (f)","profenofos (f)","Propamocarb (Sum of propamocarb and its salts, expressed as propamocarb) (R)","propargite (f)","propoxur","pyrimethanil (r)","rotenone","tebucozole (r)","thiamethoxam",NA,"Chlordane (sum of cis- and trans-chlordane) (R)(F)","Heptachlor (sum of heptachlor and heptachlor epoxide expressed as heptachlor) (F)","Chlordane (sum of cis- and trans-chlordane) (R)(F)","Cypermethrin (cypermethrin including other mixtures of constituent isomers (sum of isomers)) (F)"),
-  
-  pesticide.mrl1 = c("2,4-d","acetamiprid","aldicarb","aldrin",NA,NA,"benalaxyl",NA,"beta-cyfluthrin",NA,NA,NA,NA,"carbaryl","carbofuran","chlordane",NA,"chlorothalonil","chlorpyrifos","chlorpyrifos-methyl","chlordane","heptachlor","gamma cyhalothrin",NA,"cypermethrin","ddt (dde, ddd)","ddt (dde, ddd)",NA,NA,"deltamethrin","diazinon",NA,NA,"dichlorvos","dieldrin","difenocozole",NA,"dimethoate",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"lindane","heptachlor","heptachlor","hexachlorobenzene",NA,"imidacloprid","indoxacarb","lambda cyhalothrin","lindane","malathion","metalaxyl",NA,"metribuzin","ddt (dde, ddd)","ddt (dde, ddd)","ddt (dde, ddd)","oxamyl","chlordane","ddt (dde, ddd)","ddt (dde, ddd)","ddt (dde, ddd)",NA,NA,"piperonyl butoxide","pirimiphos-methyl","profenofos","propamocarb hydrochloride","propargite",NA,"pyrimethanil",NA,"tebucozole","thiamethoxam",NA,"chlordane","heptachlor","chlordane","zeta-cypermethrin")
-)
-
-#write.csv(mrl_pest_name, "inputs/mrl_pest_name.csv", row.names = FALSE)
-
-
-## Lifetime theoretical maximum contribution (LTMC)
-#LTMC = ∑(Ci * CoF * ED * CRi)
-#where;
-#LTMC: LTMC calculated for dietary exposure (kg)
-#Ci: Pesticide residue level in food i (mg/kg)
-#CoF: Conversion factor (1.0×10−6kg/mg)
-#ED: Exposure duration (70yr)
-#CRi: Consumption rate for food i (kg/day) * 365day/year.
-
-## Health impacts (DALYs)
-#CF = ∑{LTMC * P * (DRSF-cancer * DFcancer + DRSFnon-cancer * DFnon-cancer)} 
-#where;
-#CF: Health risk characterization factor (DALYs per million population, or DALYs)
-#LTMC: LTMC computed from the dietary exposure (kg)
-#P: Population (1.0×106, or million)
-#DRSFcancer and DRSFnon-cancer: Dose-response slope factors for cancer and noncancer (incidence/kg)
-#DFcancer: Damage factor for cancer (11.5 DALYs per incidence)
-#DFnon-cancer: Damage factor for noncancer (2.7 DALYs per incidence)
-
-Pop <- 1.0e6 # million population
-DF_cancer <- 11.5 # DALYs per incidence
-DF_non_cancer <- 2.7 # DALYs per incidence
-
-LTMC = Ci * CoF * ED * CRi * 365, #CRi kg/day to kg/year
-
-
-

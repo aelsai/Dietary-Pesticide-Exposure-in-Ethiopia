@@ -1,0 +1,42 @@
+"Model_Type","Model","Moderator","Subgroup","N","k","Mean","LL_95","UL_95","pval","i2.lvl2","i2.lvl3","i2.tot"
+"Overall Estimation","Model1.1","All Pesticides","Overall",40,2099,7.27,4.56,11.59,0,52.85,47.13,99.98
+"Subgroup Analysis","Model2.1","Use Type","Fungicide",5,100,15.43,3.02,78.97,0.0103,53.56,46.42,99.98
+"Subgroup Analysis","Model2.1","Use Type","Herbicide",8,47,16.5,2.75,99.06,0.0171,53.56,46.42,99.98
+"Subgroup Analysis","Model2.1","Use Type","Insecticide",40,1952,6.99,4.33,11.28,0,53.56,46.42,99.98
+"Subgroup Analysis","Model2.2","Food Group","Cereals",3,160,10.55,5.97,18.65,0.0041,47.07,52.91,99.98
+"Subgroup Analysis","Model2.2","Food Group","Fruits",1,46,3.26,1.5,7.11,0.0259,47.07,52.91,99.98
+"Subgroup Analysis","Model2.2","Food Group","Meat",14,230,3.83,2.52,5.82,0,47.07,52.91,99.98
+"Subgroup Analysis","Model2.2","Food Group","Milk",3,200,16.46,3.61,75.05,0.0689,47.07,52.91,99.98
+"Subgroup Analysis","Model2.2","Food Group","Others",15,855,14.64,7.87,27.23,0,47.07,52.91,99.98
+"Subgroup Analysis","Model2.2","Food Group","Vegetables",8,608,4.11,2.04,8.27,0.0072,47.07,52.91,99.98
+"Moderator Meta-Regression","Model4.1","Instrument","GC-ECD",12,605,12.53,4.61,34.1,4e-04,53.32,46.66,99.98
+"Moderator Meta-Regression","Model4.1","Instrument","GC-MS",22,1046,5.58,3.11,10,0,53.32,46.66,99.98
+"Moderator Meta-Regression","Model4.1","Instrument","GC-MS/MS",3,188,7.7,1.66,35.78,0.1213,53.32,46.66,99.98
+"Moderator Meta-Regression","Model4.1","Instrument","HPLC",1,2,21.19,11.87,37.84,0.0615,53.32,46.66,99.98
+"Moderator Meta-Regression","Model4.1","Instrument","LC-MS/MS",2,258,3.73,0.66,21.03,0.3759,53.32,46.66,99.98
+"Moderator Meta-Regression","Model4.2","Food Origin","Animal Orgin",17,430,5.17,3.21,8.32,0,50.6,49.38,99.98
+"Moderator Meta-Regression","Model4.2","Food Origin","Others",15,855,12.91,7.34,22.69,0,50.6,49.38,99.98
+"Moderator Meta-Regression","Model4.2","Food Origin","Plant Origin",11,814,5.94,2.92,12.09,2e-04,50.6,49.38,99.98
+"Moderator Meta-Regression","Model4.3","Region","Central",2,160,9.32,3.61,24.03,0.1355,50.32,49.66,99.98
+"Moderator Meta-Regression","Model4.3","Region","East",1,28,11.18,6.08,20.55,0.002,50.32,49.66,99.98
+"Moderator Meta-Regression","Model4.3","Region","North",6,115,7.52,2.27,24.86,0.0222,50.32,49.66,99.98
+"Moderator Meta-Regression","Model4.3","Region","Rift Valley",16,763,5.66,3.58,8.96,0,50.32,49.66,99.98
+"Moderator Meta-Regression","Model4.3","Region","South",3,98,11.36,7.34,17.56,0.0058,50.32,49.66,99.98
+"Moderator Meta-Regression","Model4.3","Region","Southwest",10,527,11.65,7.84,17.29,0,50.32,49.66,99.98
+"Moderator Meta-Regression","Model4.3","Region","Uncertain",4,391,10.9,0.46,258.71,0.2484,50.32,49.66,99.98
+"Moderator Meta-Regression","Model4.3","Region","West",2,17,0.96,0.01,79.66,0.989,50.32,49.66,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Arsi",4,217,4.82,2.57,9.03,8e-04,47.95,52.03,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Bale",1,30,8.96,4.19,19.17,0.0027,47.95,52.03,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Bench-Sheko",1,60,43.59,3.08,616.41,0.2189,47.95,52.03,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Gambella",1,13,7.29,1.89,28.03,0.2122,47.95,52.03,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Gonder",1,28,18.74,0.03,11541.21,0.5355,47.95,52.03,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Gurage",2,82,15.58,9.11,26.64,0.0112,47.95,52.03,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Hadiya",1,16,7.74,2.28,26.3,0.1883,47.95,52.03,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Hararge",1,28,15.16,7.45,30.84,0.0017,47.95,52.03,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Ilu Aba Bora",1,4,0.08,0.03,0.22,0.1289,47.95,52.03,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Jimma",9,467,13.26,7.88,22.29,0,47.95,52.03,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Lakes",11,164,3.44,1.94,6.12,0.0019,47.95,52.03,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Shewa",7,441,9.64,5.48,16.93,0,47.95,52.03,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Sidama",3,103,5.03,1.65,15.37,0.1052,47.95,52.03,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Uncertain",5,396,15.91,1.03,246.31,0.1293,47.95,52.03,99.98
+"Moderator Meta-Regression","Model4.4","Zone","Wollo",1,50,4.5,3.98,5.08,0.0262,47.95,52.03,99.98

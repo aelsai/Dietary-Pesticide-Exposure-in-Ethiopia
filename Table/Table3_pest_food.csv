@@ -1,0 +1,252 @@
+"pesticide","type","class","food","food_origin","food_group","k","n_samp","Mean","SD"
+"2,4-D","Herbicide",NA,"Wheat","Plant Origin","Cereals",2,19,23.75,16.35
+"acetamiprid","Insecticide","Neonicotinoid","Honey","Others","Others",14,110,8.49,15.73
+"aldicarb","Insecticide","Carbamate","Honey","Others","Others",15,106,10.18,15.86
+"aldrin","Insecticide","Organochlorine","Corn","Plant Origin","Cereals",3,9,72.79,18.99
+"aldrin","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",2,36,9.81,6.12
+"aldrin","Insecticide","Organochlorine","Honey","Others","Others",6,90,7.22,11.1
+"aldrin","Insecticide","Organochlorine","Meat","Animal Orgin","Meat",6,30,1.56,11.94
+"aldrin","Insecticide","Organochlorine","Milk","Animal Orgin","Milk",4,20,18.06,21.11
+"aldrin","Insecticide","Organochlorine","Millet","Plant Origin","Cereals",3,9,28.9,5.52
+"aldrin","Insecticide","Organochlorine","Onion","Plant Origin","Vegetables",4,16,6,4.08
+"aldrin","Insecticide","Organochlorine","Rice","Plant Origin","Cereals",3,9,53.57,17.91
+"aldrin","Insecticide","Organochlorine","Sorghum","Plant Origin","Cereals",3,9,53.98,9.45
+"aldrin","Insecticide","Organochlorine","Tea","Others","Others",10,30,310.26,12.93
+"aldrin","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",4,21,5.04,6
+"alpha-endosulfan","Insecticide","Organochlorine","Drinking water","Others","Others",4,40,10.07,10.12
+"alpha-endosulfan","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",3,173,66.05,36.96
+"alpha-endosulfan","Insecticide","Organochlorine","Honey","Others","Others",12,180,9.2,15.83
+"alpha-endosulfan","Insecticide","Organochlorine","Khat","Others","Others",6,69,8.45,22.59
+"alpha-endosulfan","Insecticide","Organochlorine","Meat","Animal Orgin","Meat",6,30,10.36,9.8
+"alpha-endosulfan","Insecticide","Organochlorine","Milk","Animal Orgin","Milk",33,165,4.14,17.34
+"alpha-endosulfan","Insecticide","Organochlorine","Onion","Plant Origin","Vegetables",21,106,0.62,15.34
+"alpha-endosulfan","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",20,104,4.31,12.14
+"alpha-HCH","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",5,130,0.62,28.85
+"alpha-HCH","Insecticide","Organochlorine","Honey","Others","Others",6,90,11.99,10.53
+"alpha-HCH","Insecticide","Organochlorine","Khat","Others","Others",10,74,3.94,13.08
+"alpha-HCH","Insecticide","Organochlorine","Meat","Animal Orgin","Meat",6,30,8.22,10.68
+"alpha-HCH","Insecticide","Organochlorine","Milk","Animal Orgin","Milk",3,15,5.44,4.45
+"alpha-HCH","Insecticide","Organochlorine","Onion","Plant Origin","Vegetables",5,22,5.27,5.63
+"alpha-HCH","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",4,21,5.65,6.51
+"alpha-HCH","Insecticide","Organochlorine","Wheat","Plant Origin","Cereals",2,140,16.36,18.69
+"benalaxyl","Fungicide",NA,"Fish","Animal Orgin","Meat",2,16,1.18,10
+"bendiocarb","Insecticide","Carbamate","Cabbage","Plant Origin","Vegetables",2,212,0,170.21
+"bendiocarb","Insecticide","Carbamate","Swiss chard","Plant Origin","Vegetables",2,70,2.1,29.2
+"bendiocarb","Insecticide","Carbamate","Tomato","Plant Origin","Vegetables",2,182,0.07,20.24
+"beta-endosulfan","Insecticide","Organochlorine","Drinking water","Others","Others",4,29,5.1,6.84
+"beta-endosulfan","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",2,167,37.07,18.61
+"beta-endosulfan","Insecticide","Organochlorine","Khat","Others","Others",5,39,2.89,9.99
+"beta-endosulfan","Insecticide","Organochlorine","Milk","Animal Orgin","Milk",33,165,3.87,18.5
+"beta-endosulfan","Insecticide","Organochlorine","Onion","Plant Origin","Vegetables",20,100,0.69,14.9
+"beta-endosulfan","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",20,100,14.9,10.1
+"beta-HCH","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",5,130,0.82,29.19
+"beta-HCH","Insecticide","Organochlorine","Honey","Others","Others",6,90,16.69,10.63
+"beta-HCH","Insecticide","Organochlorine","Khat","Others","Others",10,74,12.53,19.01
+"beta-HCH","Insecticide","Organochlorine","Onion","Plant Origin","Vegetables",5,22,4.75,6.99
+"beta-HCH","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",4,21,7.69,6.09
+"butachlor","Herbicide",NA,"Fish","Animal Orgin","Meat",2,16,15.69,64.76
+"carbaryl","Insecticide","Carbamate","Fish","Animal Orgin","Meat",2,16,0.4,15.16
+"carbaryl","Insecticide","Carbamate","Honey","Others","Others",14,83,8.08,13.67
+"carbofuran","Insecticide","Carbamate","Honey","Others","Others",14,113,4.81,14.24
+"chlordane","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",5,101,2.26,14.17
+"chlordane","Insecticide","Organochlorine","Milk","Animal Orgin","Milk",3,15,17.71,23.35
+"chlorflurenol-methyl","Herbicide",NA,"Tomato","Plant Origin","Vegetables",3,12,427.94,4.71
+"chlorothalonil","Fungicide",NA,"Meat","Animal Orgin","Meat",6,30,3.21,6.41
+"chlorpyrifos","Insecticide","Organophosphate","Fish","Animal Orgin","Meat",4,82,3.93,24.36
+"chlorpyrifos","Insecticide","Organophosphate","Honey","Others","Others",16,125,8,18
+"chlorpyrifos","Insecticide","Organophosphate","Pineapple","Plant Origin","Fruits",5,20,2.46,14.4
+"chlorpyrifos","Insecticide","Organophosphate","Potato","Plant Origin","Vegetables",5,20,1.92,9.62
+"chlorpyrifos","Insecticide","Organophosphate","Tomato","Plant Origin","Vegetables",5,20,2.75,6.98
+"cis-chlordane","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",5,106,0.22,18.12
+"cis-chlordane","Insecticide","Organochlorine","Honey","Others","Others",6,90,24.97,18.59
+"cis-chlordane","Insecticide","Organochlorine","Khat","Others","Others",5,39,10.1,8.62
+"cis-heptachlor epoxide","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",5,106,0.56,24.92
+"cis-heptachlor epoxide","Insecticide","Organochlorine","Honey","Others","Others",6,90,11.2,15.27
+"cis-heptachlor epoxide","Insecticide","Organochlorine","Khat","Others","Others",2,30,0.54,6.57
+"cyhalothrin","Insecticide","Pyrethroid","Wheat","Plant Origin","Cereals",2,27,7.92,7.48
+"cymiazole ","Insecticide","Other","Honey","Others","Others",14,131,6.08,14.99
+"cypermethrin","Insecticide","Pyrethroid","Drinking water","Others","Others",6,18,84.48,7.59
+"DDT","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",11,202,4.54,18.9
+"delta-HCH","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",4,100,0.92,35.5
+"delta-HCH","Insecticide","Organochlorine","Khat","Others","Others",10,74,12.4,13.59
+"delta-HCH","Insecticide","Organochlorine","Onion","Plant Origin","Vegetables",4,16,7.79,4.24
+"delta-HCH","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",3,12,8.6,4.36
+"deltamethrin","Insecticide","Pyrethroid","Cabbage","Plant Origin","Vegetables",4,48,21.38,10.74
+"deltamethrin","Insecticide","Pyrethroid","Drinking water","Others","Others",6,18,20.31,8.44
+"deltamethrin","Insecticide","Pyrethroid","Potato","Plant Origin","Vegetables",4,48,13.18,10.32
+"diazinon","Insecticide","Organochlorine","Cabbage","Plant Origin","Vegetables",3,234,0.02,27508.39
+"diazinon","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",3,191,1.12,26.53
+"diazinon","Insecticide","Organochlorine","Wheat","Plant Origin","Cereals",14,66,127,13.97
+"dibutyl-chlorendate","Herbicide",NA,"Tea","Others","Others",13,39,374,6.31
+"dichlorvos","Insecticide","Organophosphate","Honey","Others","Others",14,130,5.01,15.85
+"dieldrin","Insecticide","Organochlorine","Honey","Others","Others",6,90,10.79,11.29
+"dieldrin","Insecticide","Organochlorine","Khat","Others","Others",5,39,2.91,25.79
+"dieldrin","Insecticide","Organochlorine","Meat","Animal Orgin","Meat",6,30,7.26,10.68
+"dieldrin","Insecticide","Organochlorine","Pineapple","Plant Origin","Fruits",5,20,1.18,11.36
+"dieldrin","Insecticide","Organochlorine","Potato","Plant Origin","Vegetables",5,20,11.99,11.09
+"dieldrin","Insecticide","Organochlorine","Tea","Others","Others",16,48,190.01,7
+"dieldrin","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",5,20,8.29,16.19
+"dieldrin","Insecticide","Organochlorine","Wheat","Plant Origin","Cereals",2,8,7.44,16.4
+"diethyltoluamide","Insecticide","Other","Honey","Others","Others",14,152,5.36,13.93
+"difenoconazole","Fungicide",NA,"Fish","Animal Orgin","Meat",2,16,0.27,15.52
+"dimethachlor","Herbicide",NA,"Cabbage","Plant Origin","Vegetables",2,24,213.76,48.16
+"dimethachlor","Herbicide",NA,"Drinking water","Others","Others",5,15,111.35,5.77
+"dimethoate","Insecticide","Organophosphate","Corn","Plant Origin","Cereals",3,9,68.34,10.29
+"dimethoate","Insecticide","Organophosphate","Honey","Others","Others",14,87,11.22,11.47
+"dimethoate","Insecticide","Organophosphate","Milk","Animal Orgin","Milk",3,15,15.48,6.97
+"dimethoate","Insecticide","Organophosphate","Millet","Plant Origin","Cereals",3,9,61.57,11.67
+"dimethoate","Insecticide","Organophosphate","Pineapple","Plant Origin","Fruits",5,20,9.14,12.92
+"dimethoate","Insecticide","Organophosphate","Potato","Plant Origin","Vegetables",5,20,11.16,14.04
+"dimethoate","Insecticide","Organophosphate","Rice","Plant Origin","Cereals",3,9,66.98,18.3
+"dimethoate","Insecticide","Organophosphate","Sorghum","Plant Origin","Cereals",3,9,48.55,15.72
+"dimethoate","Insecticide","Organophosphate","Tomato","Plant Origin","Vegetables",5,20,5.12,10.29
+"endosulfan-sulfate","Insecticide","Organochlorine","Corn","Plant Origin","Cereals",3,9,29.7,5.19
+"endosulfan-sulfate","Insecticide","Organochlorine","Honey","Others","Others",8,106,15.68,19.25
+"endosulfan-sulfate","Insecticide","Organochlorine","Khat","Others","Others",5,39,2.13,23.86
+"endosulfan-sulfate","Insecticide","Organochlorine","Millet","Plant Origin","Cereals",3,9,19.36,5.64
+"endosulfan-sulfate","Insecticide","Organochlorine","Pineapple","Plant Origin","Fruits",5,20,1.77,12.92
+"endosulfan-sulfate","Insecticide","Organochlorine","Potato","Plant Origin","Vegetables",5,20,1.5,12.66
+"endosulfan-sulfate","Insecticide","Organochlorine","Rice","Plant Origin","Cereals",3,9,67.37,18.27
+"endosulfan-sulfate","Insecticide","Organochlorine","Sorghum","Plant Origin","Cereals",3,9,50.15,15.06
+"endosulfan-sulfate","Insecticide","Organochlorine","Tea","Others","Others",17,51,288.33,11.78
+"endosulfan-sulfate","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",5,20,1.45,10.55
+"endosulfan","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",8,153,3.83,18.55
+"endosulfan","Insecticide","Organochlorine","Wheat","Plant Origin","Cereals",2,8,5.21,5.69
+"endrin-aldehyde","Insecticide","Organochlorine","Honey","Others","Others",6,90,18,19.26
+"endrin-aldehyde","Insecticide","Organochlorine","Khat","Others","Others",2,30,23.64,6.57
+"endrin-ketone","Insecticide","Organochlorine","Honey","Others","Others",6,90,18.19,18.69
+"endrin-ketone","Insecticide","Organochlorine","Khat","Others","Others",5,39,13.59,27.98
+"endrin","Insecticide","Organochlorine","Cabbage","Plant Origin","Vegetables",3,234,8.31,17.44
+"endrin","Insecticide","Organochlorine","Honey","Others","Others",6,90,15.84,14.7
+"endrin","Insecticide","Organochlorine","Khat","Others","Others",5,39,4.84,13.93
+"endrin","Insecticide","Organochlorine","Meat","Animal Orgin","Meat",6,30,2.85,9.75
+"endrin","Insecticide","Organochlorine","Pineapple","Plant Origin","Fruits",5,20,1.72,7.51
+"endrin","Insecticide","Organochlorine","Potato","Plant Origin","Vegetables",5,20,4.97,12.34
+"endrin","Insecticide","Organochlorine","Swiss chard","Plant Origin","Vegetables",2,70,24.49,93.54
+"endrin","Insecticide","Organochlorine","Tea","Others","Others",16,48,362.92,7
+"endrin","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",7,202,3.98,20.75
+"fenobucarb","Insecticide","Carbamate","Honey","Others","Others",14,95,5.67,13.84
+"flazasulfuron","Herbicide",NA,"Fish","Animal Orgin","Meat",2,16,2.2,6.2
+"gamma-HCH","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",4,100,0.56,12.9
+"gamma-HCH","Insecticide","Organochlorine","Honey","Others","Others",6,90,26.92,29.69
+"gamma-HCH","Insecticide","Organochlorine","Khat","Others","Others",10,74,4.92,13.59
+"heptachlor epoxide","Insecticide","Organochlorine","Khat","Others","Others",3,9,282.22,20.04
+"heptachlor epoxide","Insecticide","Organochlorine","Milk","Animal Orgin","Milk",3,15,19.91,11.66
+"heptachlor epoxide","Insecticide","Organochlorine","Tea","Others","Others",10,30,329.7,15.34
+"heptachlor","Insecticide","Organochlorine","Cabbage","Plant Origin","Vegetables",5,70,12.81,13.3
+"heptachlor","Insecticide","Organochlorine","Drinking water","Others","Others",6,18,54.66,8.57
+"heptachlor","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",6,113,7.4,11.91
+"heptachlor","Insecticide","Organochlorine","Honey","Others","Others",6,90,7.13,12.81
+"heptachlor","Insecticide","Organochlorine","Khat","Others","Others",5,39,5.41,12.05
+"heptachlor","Insecticide","Organochlorine","Milk","Animal Orgin","Milk",3,15,7.68,5.27
+"heptachlor","Insecticide","Organochlorine","Onion","Plant Origin","Vegetables",4,42,43.02,26.44
+"heptachlor","Insecticide","Organochlorine","Potato","Plant Origin","Vegetables",4,48,25.26,12.68
+"hexachlorobenzene","Insecticide","Organochlorine","Milk","Animal Orgin","Milk",3,15,12.18,6.24
+"hexachlorobenzene","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",2,24,0.39,15.82
+"hexaconazole","Fungicide",NA,"Honey","Others","Others",14,86,5.22,13.45
+"imidacloprid","Insecticide","Neonicotinoid","Fish","Animal Orgin","Meat",2,16,0.79,10.28
+"lambda-cyhalothrin","Insecticide","Pyrethroid","Drinking water","Others","Others",3,39,7.91,6.56
+"lambda-cyhalothrin","Insecticide","Pyrethroid","Onion","Plant Origin","Vegetables",20,100,5,11.1
+"lambda-cyhalothrin","Insecticide","Pyrethroid","Tomato","Plant Origin","Vegetables",20,100,8.21,12.5
+"lindane","Insecticide","Organochlorine","Cabbage","Plant Origin","Vegetables",4,48,6.97,9.21
+"lindane","Insecticide","Organochlorine","Drinking water","Others","Others",6,18,23.53,6.53
+"lindane","Insecticide","Organochlorine","Honey","Others","Others",6,90,20.28,22.96
+"lindane","Insecticide","Organochlorine","Onion","Plant Origin","Vegetables",3,36,173.59,15.54
+"lindane","Insecticide","Organochlorine","Potato","Plant Origin","Vegetables",4,48,39.45,13.65
+"malathion","Insecticide","Organophosphate","Honey","Others","Others",15,125,7.19,14.76
+"malathion","Insecticide","Organophosphate","Pineapple","Plant Origin","Fruits",5,20,16.13,9.88
+"malathion","Insecticide","Organophosphate","Potato","Plant Origin","Vegetables",5,20,8.32,5.99
+"malathion","Insecticide","Organophosphate","Tomato","Plant Origin","Vegetables",6,29,15.06,12.22
+"metalaxyl","Fungicide",NA,"Drinking water","Others","Others",4,47,7.33,7.2
+"metalaxyl","Fungicide",NA,"Honey","Others","Others",14,122,6.27,14.58
+"metalaxyl","Fungicide",NA,"Onion","Plant Origin","Vegetables",19,95,15.75,13.16
+"metalaxyl","Fungicide",NA,"Tomato","Plant Origin","Vegetables",20,100,32.01,14.1
+"methoxychlor","Insecticide","Organochlorine","Honey","Others","Others",6,90,11.49,10.91
+"methoxychlor","Insecticide","Organochlorine","Khat","Others","Others",5,39,8.65,19.42
+"methoxychlor","Insecticide","Organochlorine","Milk","Animal Orgin","Milk",3,15,5.98,4.45
+"methoxychlor","Insecticide","Organochlorine","Onion","Plant Origin","Vegetables",4,16,9.24,4.44
+"methoxychlor","Insecticide","Organochlorine","Pineapple","Plant Origin","Fruits",5,20,8.41,5.77
+"methoxychlor","Insecticide","Organochlorine","Potato","Plant Origin","Vegetables",5,20,2.58,8.05
+"methoxychlor","Insecticide","Organochlorine","Tea","Others","Others",15,45,212,6.78
+"methoxychlor","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",8,32,10.5,6.05
+"metribuzin","Herbicide",NA,"Honey","Others","Others",14,153,5.91,15.71
+"o,p'-DDD","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",4,50,6.31,43.56
+"o,p'-DDD","Insecticide","Organochlorine","Khat","Others","Others",5,35,1.42,7.22
+"o,p'-DDE","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",9,156,0.95,32.1
+"o,p'-DDE","Insecticide","Organochlorine","Khat","Others","Others",5,35,0.86,8.05
+"o,p'-DDT","Insecticide","Organochlorine","Cabbage","Plant Origin","Vegetables",4,48,86.48,19.75
+"o,p'-DDT","Insecticide","Organochlorine","Drinking water","Others","Others",6,18,52.71,13.66
+"o,p'-DDT","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",8,150,2.54,30.37
+"o,p'-DDT","Insecticide","Organochlorine","Khat","Others","Others",26,168,17.27,18.92
+"o,p'-DDT","Insecticide","Organochlorine","Meat","Animal Orgin","Meat",3,15,59.31,26.41
+"o,p'-DDT","Insecticide","Organochlorine","Milk","Animal Orgin","Milk",30,150,11.17,20.45
+"o,p'-DDT","Insecticide","Organochlorine","Onion","Plant Origin","Vegetables",4,48,49.09,16.63
+"o,p'-DDT","Insecticide","Organochlorine","Potato","Plant Origin","Vegetables",4,48,6.98,8.8
+"o,p'-DDT","Insecticide","Organochlorine","Wheat","Plant Origin","Cereals",14,66,17.7,9.67
+"oxamyl","Insecticide","Carbamate","Fish","Animal Orgin","Meat",2,16,26.8,8.44
+"oxy-chlordane","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",4,100,0.1,22
+"p,p'-DDD","Insecticide","Organochlorine","Cabbage","Plant Origin","Vegetables",4,48,46.35,12.96
+"p,p'-DDD","Insecticide","Organochlorine","Drinking water","Others","Others",6,18,91.14,19.18
+"p,p'-DDD","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",14,410,2.59,28.96
+"p,p'-DDD","Insecticide","Organochlorine","Honey","Others","Others",6,90,15.3,13.66
+"p,p'-DDD","Insecticide","Organochlorine","Khat","Others","Others",21,147,6.59,15.16
+"p,p'-DDD","Insecticide","Organochlorine","Milk","Animal Orgin","Milk",6,45,20.48,11.61
+"p,p'-DDD","Insecticide","Organochlorine","Onion","Plant Origin","Vegetables",4,48,52.71,13.09
+"p,p'-DDD","Insecticide","Organochlorine","Potato","Plant Origin","Vegetables",4,48,5.04,7.97
+"p,p'-DDE","Insecticide","Organochlorine","Cabbage","Plant Origin","Vegetables",5,70,31.68,12.38
+"p,p'-DDE","Insecticide","Organochlorine","Corn","Plant Origin","Cereals",3,9,14.89,7.77
+"p,p'-DDE","Insecticide","Organochlorine","Drinking water","Others","Others",6,18,0.6,6.19
+"p,p'-DDE","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",23,756,4.04,34.09
+"p,p'-DDE","Insecticide","Organochlorine","Honey","Others","Others",6,90,11.68,12.05
+"p,p'-DDE","Insecticide","Organochlorine","Khat","Others","Others",43,248,14.06,20
+"p,p'-DDE","Insecticide","Organochlorine","Milk","Animal Orgin","Milk",36,195,10.42,20.95
+"p,p'-DDE","Insecticide","Organochlorine","Millet","Plant Origin","Cereals",3,9,72.01,9.54
+"p,p'-DDE","Insecticide","Organochlorine","Onion","Plant Origin","Vegetables",27,152,4.5,14.79
+"p,p'-DDE","Insecticide","Organochlorine","Pineapple","Plant Origin","Fruits",5,20,1.65,18.74
+"p,p'-DDE","Insecticide","Organochlorine","Potato","Plant Origin","Vegetables",9,68,3.07,10.56
+"p,p'-DDE","Insecticide","Organochlorine","Rice","Plant Origin","Cereals",3,9,46.21,15.21
+"p,p'-DDE","Insecticide","Organochlorine","Sorghum","Plant Origin","Cereals",3,9,60.53,15.12
+"p,p'-DDE","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",29,147,0.89,14.79
+"p,p'-DDE","Insecticide","Organochlorine","Wheat","Plant Origin","Cereals",14,66,22.83,11.21
+"p,p'-DDT","Insecticide","Organochlorine","Cabbage","Plant Origin","Vegetables",4,48,37.93,10.25
+"p,p'-DDT","Insecticide","Organochlorine","Corn","Plant Origin","Cereals",3,9,26.21,10.74
+"p,p'-DDT","Insecticide","Organochlorine","Drinking water","Others","Others",6,18,15.36,9.63
+"p,p'-DDT","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",14,410,3,29.77
+"p,p'-DDT","Insecticide","Organochlorine","Honey","Others","Others",7,98,6.47,13.46
+"p,p'-DDT","Insecticide","Organochlorine","Khat","Others","Others",37,238,19.8,18.67
+"p,p'-DDT","Insecticide","Organochlorine","Milk","Animal Orgin","Milk",34,185,38.82,20.4
+"p,p'-DDT","Insecticide","Organochlorine","Millet","Plant Origin","Cereals",3,9,57.46,18.33
+"p,p'-DDT","Insecticide","Organochlorine","Onion","Plant Origin","Vegetables",27,152,7.72,13.56
+"p,p'-DDT","Insecticide","Organochlorine","Pineapple","Plant Origin","Fruits",5,20,2.62,9.3
+"p,p'-DDT","Insecticide","Organochlorine","Potato","Plant Origin","Vegetables",9,68,10.88,18.55
+"p,p'-DDT","Insecticide","Organochlorine","Rice","Plant Origin","Cereals",3,9,41.08,17.34
+"p,p'-DDT","Insecticide","Organochlorine","Sorghum","Plant Origin","Cereals",3,9,45.47,10.95
+"p,p'-DDT","Insecticide","Organochlorine","Tea","Others","Others",11,33,385.44,9.36
+"p,p'-DDT","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",28,132,1.44,15.85
+"p,p'-DDT","Insecticide","Organochlorine","Wheat","Plant Origin","Cereals",16,76,46.48,15.69
+"pirimiphos-methyl","Insecticide","Organophosphate","Fish","Animal Orgin","Meat",2,16,0.55,7.4
+"profenofos","Insecticide","Organophosphate","Cabbage","Plant Origin","Vegetables",2,212,17.78,282.61
+"profenofos","Insecticide","Organophosphate","Drinking water","Others","Others",3,18,49.11,14.34
+"profenofos","Insecticide","Organophosphate","Milk","Animal Orgin","Milk",3,15,5.7,6.66
+"profenofos","Insecticide","Organophosphate","Onion","Plant Origin","Vegetables",21,106,0.99,17.71
+"profenofos","Insecticide","Organophosphate","Swiss chard","Plant Origin","Vegetables",2,70,6.99,103.16
+"profenofos","Insecticide","Organophosphate","Tomato","Plant Origin","Vegetables",23,291,10.88,21.49
+"propargite","Insecticide","Other","Cabbage","Plant Origin","Vegetables",2,212,1.41,41.93
+"propargite","Insecticide","Other","Swiss chard","Plant Origin","Vegetables",2,70,0.49,14.47
+"propargite","Insecticide","Other","Tomato","Plant Origin","Vegetables",3,191,2.93,34.55
+"pyrimethanil","Fungicide",NA,"Fish","Animal Orgin","Meat",2,16,7.41,18.28
+"rotenone","Insecticide","Other","Honey","Others","Others",14,99,8.09,15.12
+"tebuconazole","Fungicide",NA,"Fish","Animal Orgin","Meat",2,16,0.73,7.6
+"tebuconazole","Fungicide",NA,"Honey","Others","Others",14,96,11.55,17.34
+"thiamethoxam","Insecticide","Neonicotinoid","Honey","Others","Others",14,84,9.6,15.31
+"trans-chlordane","Insecticide","Organochlorine","Cabbage","Plant Origin","Vegetables",5,70,5.41,9.12
+"trans-chlordane","Insecticide","Organochlorine","Drinking water","Others","Others",6,18,4.28,5.26
+"trans-chlordane","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",5,106,1.01,43.14
+"trans-chlordane","Insecticide","Organochlorine","Honey","Others","Others",6,90,4.62,12.71
+"trans-chlordane","Insecticide","Organochlorine","Khat","Others","Others",5,39,9.66,22.29
+"trans-chlordane","Insecticide","Organochlorine","Onion","Plant Origin","Vegetables",8,64,9.4,11.52
+"trans-chlordane","Insecticide","Organochlorine","Potato","Plant Origin","Vegetables",4,48,4,7
+"trans-chlordane","Insecticide","Organochlorine","Tea","Others","Others",14,42,354.22,16.2
+"trans-chlordane","Insecticide","Organochlorine","Tomato","Plant Origin","Vegetables",3,12,3.87,5.92
+"trans-heptachlor-epoxide","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",4,100,0.35,16.1
+"trans-nonachlor","Insecticide","Organochlorine","Fish","Animal Orgin","Meat",4,100,0.34,13
